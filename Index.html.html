@@ -1,0 +1,1019 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>ECG Crib Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: sticky grouped sidebar + one reading column of "ECG paper" sheets; sidebar becomes a sticky chip bar on narrow screens */
+:root{
+  --bg:#faf6f6; --surface:#ffffff; --sunk:#f5eff0; --fg:#1f1a21; --muted:#6b5e67; --line:#ead9dc;
+  --grid-minor:#f6dcdc; --grid-major:#ebb6ba; --trace:#1f1a22;
+  --red:#c42a3e; --red-bg:#fdecee;
+  --green:#1d7a52; --green-bg:#e5f4eb;
+  --amber:#a8630a; --amber-bg:#fdf1de;
+  --blue:#2a58a8; --blue-bg:#e8eefb;
+  --violet:#7445a8; --violet-bg:#f1eafa;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#131015; --surface:#1c181f; --sunk:#17141a; --fg:#efe8ee; --muted:#ab9eaa; --line:#382d35;
+  --grid-minor:#2a1d22; --grid-major:#4d2e36; --trace:#f3eaf0;
+  --red:#ff7083; --red-bg:#3a1a21; --green:#5fd39c; --green-bg:#15301f;
+  --amber:#f2ad4e; --amber-bg:#352612; --blue:#86abff; --blue-bg:#1a2442;
+  --violet:#c4a1f4; --violet-bg:#2a1f3a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#131015; --surface:#1c181f; --sunk:#17141a; --fg:#efe8ee; --muted:#ab9eaa; --line:#382d35;
+  --grid-minor:#2a1d22; --grid-major:#4d2e36; --trace:#f3eaf0;
+  --red:#ff7083; --red-bg:#3a1a21; --green:#5fd39c; --green-bg:#15301f;
+  --amber:#f2ad4e; --amber-bg:#352612; --blue:#86abff; --blue-bg:#1a2442;
+  --violet:#c4a1f4; --violet-bg:#2a1f3a; color-scheme:dark}
+
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+.layout{max-width:1260px;margin:0 auto;padding-inline:24px;padding-block:24px 80px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:44px}
+main{min-width:0}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.12;margin:0}
+h1{font-size:clamp(2.2rem,5.4vw,3.6rem);font-weight:900;letter-spacing:-.02em}
+h2{font-size:1.65rem;font-weight:800;display:flex;gap:.7rem;align-items:baseline}
+h2 .n{font-family:var(--mono);font-size:.8rem;color:var(--red);font-weight:700;letter-spacing:.04em}
+h3{font-size:1.06rem;font-weight:700}
+p{margin:0}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+b.t{display:block;font-family:var(--display);font-weight:700;margin-bottom:3px}
+
+/* sidebar */
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;max-height:calc(100vh - 40px);overflow:auto;padding-right:4px}
+.brand{font:900 1.05rem var(--display);display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.brand svg{width:34px;height:18px}
+.navgrp{margin-bottom:14px}
+.navgrp > span{display:block;font:700 .68rem var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.navgrp a{display:flex;gap:8px;align-items:baseline;text-decoration:none;color:var(--fg);font-size:.9rem;padding:4px 8px;border-radius:6px;border-left:2px solid transparent}
+.navgrp a .mono{font-size:.7rem;color:var(--muted)}
+.navgrp a:hover{background:var(--sunk)}
+.navgrp a.active{background:var(--red-bg);border-left-color:var(--red);color:var(--red);font-weight:700}
+.navgrp a:focus-visible{outline:2px solid var(--red);outline-offset:1px}
+@media (max-width:980px){
+  .layout{grid-template-columns:1fr;gap:0;padding-inline:16px}
+  aside{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;max-height:none;background:var(--bg);margin-inline:-16px;padding:8px 16px;border-bottom:1px solid var(--line);overflow-x:auto;overflow-y:hidden;white-space:nowrap}
+  .brand,.navgrp > span{display:none}
+  .navgrp{display:inline;margin:0}
+  .navgrp a{display:inline-flex;border:1px solid var(--line);border-radius:999px;margin-right:6px;padding:3px 10px;background:var(--surface)}
+  .navgrp a .mono{display:none}
+  .navgrp a.active{border-color:var(--red)}
+}
+
+/* hero */
+.hero{display:grid;gap:14px;padding-top:8px}
+.eyebrow{font:700 .75rem var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--red)}
+.hero p.sub{max-width:62ch;color:var(--muted);font-size:1.02rem}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.85rem;color:var(--muted)}
+.paper{background-color:var(--surface);
+  background-image:linear-gradient(var(--grid-major) 1px,transparent 1px),linear-gradient(90deg,var(--grid-major) 1px,transparent 1px),linear-gradient(var(--grid-minor) 1px,transparent 1px),linear-gradient(90deg,var(--grid-minor) 1px,transparent 1px);
+  background-size:40px 40px,40px 40px,8px 8px,8px 8px;border:1px solid var(--line);border-radius:8px}
+.plain{background:var(--surface);border:1px solid var(--line);border-radius:8px}
+.herostrip{height:84px;overflow:hidden}
+.herostrip svg{width:100%;height:100%;display:block}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}.screen{height:160px}}
+.num{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:2px;text-decoration:none;color:var(--fg)}
+.num:hover{border-color:var(--red)}
+.num .v{font:700 1.15rem var(--mono);color:var(--red);font-variant-numeric:tabular-nums}
+.num .l{font-size:.8rem;color:var(--muted)}
+
+/* parts and sections */
+.part{margin-top:64px;display:flex;align-items:center;gap:14px}
+.part span{font:900 .78rem var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.part::after{content:"";flex:1;height:1px;background:var(--line)}
+section{margin-top:30px;display:grid;gap:16px;scroll-margin-top:72px}
+.lede{max-width:68ch}
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;align-items:start}
+.two > *{min-width:0}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.fig{padding:12px}
+.fig svg{display:block;width:100%;height:auto}
+.cap{font-size:.88rem;color:var(--muted);margin-top:8px}
+.callout{border-radius:8px;padding:12px 14px;border:1px solid}
+.c-red{background:var(--red-bg);border-color:var(--red)}
+.c-green{background:var(--green-bg);border-color:var(--green)}
+.c-amber{background:var(--amber-bg);border-color:var(--amber)}
+.c-blue{background:var(--blue-bg);border-color:var(--blue)}
+.c-violet{background:var(--violet-bg);border-color:var(--violet)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;min-width:100%;font-size:.93rem}
+th,td{padding:7px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-weight:700;font-size:.84rem;letter-spacing:.02em;background:var(--red-bg)}
+td.k{white-space:nowrap;font-weight:700}
+tr:last-child td{border-bottom:0}
+.ok{color:var(--green);font-weight:700}.bad{color:var(--red);font-weight:700}.warn{color:var(--amber);font-weight:700}
+.tag{display:inline-block;font:500 .66rem var(--mono);letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:4px;border:1px solid var(--muted);color:var(--muted);vertical-align:2px}
+.memo{display:inline-block;font:700 .64rem var(--mono);letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:4px;background:var(--red);color:#fff;vertical-align:2px}
+:root[data-theme="dark"] .memo{color:#1a0f12}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .memo{color:#1a0f12}}
+.tool{display:grid;gap:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:16px}
+.toolhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:end}
+.toolname{font:800 1.4rem var(--display)}
+.toolsub{font-size:.82rem;color:var(--muted)}
+.btn{font:700 .84rem var(--body);padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;line-height:1.3}
+.btn:hover{border-color:var(--red)}
+.btn:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.btn[aria-pressed="true"],.btn.on{background:var(--red);border-color:var(--red);color:#fff}
+.btn.right{background:var(--green);border-color:var(--green);color:#fff}
+.btn.wrong{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+:root[data-theme="dark"] .btn.on,:root[data-theme="dark"] .btn[aria-pressed="true"],:root[data-theme="dark"] .btn.right{color:#140c10}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.on,:root:not([data-theme="light"]) .btn[aria-pressed="true"],:root:not([data-theme="light"]) .btn.right{color:#140c10}}
+.btnrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.grp .gl{font:700 .7rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:110px}
+@media (max-width:640px){.grp .gl{width:100%}}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px}
+.fact{border-radius:8px;padding:9px 12px;border:1px solid var(--line);background:var(--sunk)}
+.fact b.t{font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.fact ul{margin:4px 0 0;padding-left:18px}
+.fact.wide{grid-column:1/-1}
+.readout{display:flex;gap:18px}
+.readout > div{display:grid;justify-items:end}
+.lbl{font-size:.7rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.big{font-size:1.45rem;font-weight:700}
+.hidden-blur{filter:blur(6px);user-select:none}
+
+/* monitor */
+.screen{height:240px;overflow:hidden;position:relative;border:1px solid var(--line);border-radius:8px}
+.screen canvas{display:block;width:100%;height:100%;touch-action:none}
+.screen.cal canvas{cursor:crosshair}
+.calread{position:absolute;right:10px;top:10px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:.82rem}
+
+/* beat svg */
+.beatsvg{display:block;width:100%;height:auto;max-height:min(52vh,400px)}
+.zone{cursor:pointer}
+.zone:focus-visible{outline:none}
+.zone:focus-visible rect{stroke:var(--red);stroke-width:1}
+
+/* strips */
+.strips{display:grid;gap:10px}
+.strip{display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px;align-items:center}
+@media (max-width:640px){.strip{grid-template-columns:1fr}}
+.strip .s{height:86px;overflow:hidden}
+.strip svg{width:100%;height:100%;display:block}
+.strip p{font-size:.87rem;color:var(--muted)}
+.strip .btn{margin-top:6px;font-size:.76rem;padding:3px 10px}
+
+/* leads */
+.leads{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.lead{border-radius:6px;padding:10px 6px;text-align:center;font:700 1rem var(--mono);border:1px solid var(--line);background:var(--surface)}
+.lead small{display:block;font:400 .7rem var(--body);color:var(--muted)}
+.L-inf{background:var(--amber-bg);border-color:var(--amber)}
+.L-lat{background:var(--blue-bg);border-color:var(--blue)}
+.L-ant{background:var(--green-bg);border-color:var(--green)}
+.L-avr{background:var(--violet-bg);border-color:var(--violet)}
+.ecg12{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.l12{border:1px solid var(--line);border-radius:6px;overflow:hidden;position:relative;background:var(--surface)}
+.l12 svg{display:block;width:100%;height:auto}
+.l12 b{position:absolute;left:6px;top:3px;font:700 .78rem var(--mono)}
+.l12.up{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.l12.down{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
+
+/* axis */
+.ax{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:720px){.ax{grid-template-columns:1fr}}
+.ax-wheel svg{cursor:crosshair;touch-action:none}
+.ax-side{display:grid;gap:12px;min-width:0}
+.ax-label{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;font:700 1rem var(--display)}
+.pill{font:700 .78rem var(--display);padding:3px 10px;border-radius:999px;border:1px solid}
+input[type=range]{width:100%;accent-color:var(--red)}
+.ax-leads{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}
+@media (max-width:520px){.ax-leads{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ax-lead{border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:6px 4px;text-align:center}
+.ax-lead svg{width:100%;height:60px;display:block}
+.ax-lead b{font:700 .88rem var(--mono)}
+.ax-lead small{display:block;font-size:.7rem;color:var(--muted)}
+.ax-lead.key{border-color:var(--red);box-shadow:inset 0 0 0 1px var(--red)}
+.quad{display:grid;grid-template-columns:auto repeat(2,minmax(0,1fr));gap:6px}
+.quad > div{border-radius:6px;padding:9px;font-size:.9rem;border:1px solid var(--line);background:var(--surface)}
+.quad .h{background:transparent;border:0;font:700 .78rem var(--display);display:grid;place-items:center;text-align:center;color:var(--muted)}
+
+/* checklist */
+.check{display:grid;gap:6px}
+.check details{border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.check summary{list-style:none;display:grid;grid-template-columns:26px 1fr auto;gap:10px;align-items:center;padding:9px 12px;cursor:pointer}
+.check summary::-webkit-details-marker{display:none}
+.check summary .dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 .72rem var(--mono);border:1.5px solid var(--red);color:var(--red)}
+.check details.done summary .dot{background:var(--green);border-color:var(--green);color:var(--surface)}
+.check summary .chev{color:var(--muted);transition:transform .2s}
+.check details[open] summary .chev{transform:rotate(90deg)}
+.check .body{padding:0 12px 12px 48px;font-size:.93rem;display:grid;gap:8px}
+.check label{display:inline-flex;gap:6px;align-items:center;font-size:.82rem;color:var(--muted);cursor:pointer}
+.progress{height:6px;border-radius:99px;background:var(--sunk);overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;width:0;background:var(--green);transition:width .3s}
+
+/* tree */
+.tree{display:grid;gap:10px}
+.tree .q{font:700 .95rem var(--display)}
+.tree .res{display:grid;gap:8px}
+.resitem{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:var(--sunk)}
+
+/* evolution slider */
+.stops{display:grid;grid-template-columns:repeat(6,1fr);font-size:.74rem;color:var(--muted);text-align:center}
+.stops span{cursor:pointer}
+.stops span.on{color:var(--red);font-weight:700}
+
+.filter{display:flex;flex-wrap:wrap;gap:6px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.cc{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:12px 14px;display:grid;gap:6px;align-content:start}
+.cc .cat{font:700 .66rem var(--display);letter-spacing:.1em;text-transform:uppercase}
+.cc ul,.cc ol{margin:0;padding-left:18px}
+
+svg text{font-family:var(--body);fill:var(--fg);paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+svg .tr{fill:none;stroke:var(--trace);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+svg .bg-green{fill:var(--green-bg)} svg .bg-amber{fill:var(--amber-bg)} svg .bg-blue{fill:var(--blue-bg)} svg .bg-red{fill:var(--red-bg)}
+svg .surf{fill:var(--surface)}
+footer{margin-top:56px;font-size:.84rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head><body>
+
+<div class="layout">
+<aside>
+  <div class="brand"><svg viewBox="0 0 34 18" aria-hidden="true"><path d="M0 11 L8 11 L10 13 L13 2 L16 16 L18 11 L34 11" fill="none" stroke="var(--red)" stroke-width="2" stroke-linejoin="round"/></svg>ECG Crib Sheet</div>
+  <nav id="nav" aria-label="Sections">
+    <div class="navgrp"><span>Live tools</span>
+      <a href="#monitor"><span class="mono">00</span>Rhythm monitor</a>
+      <a href="#lab"><span class="mono">01</span>Beat lab</a>
+    </div>
+    <div class="navgrp"><span>Foundations</span>
+      <a href="#paper"><span class="mono">02</span>Paper</a>
+      <a href="#beat"><span class="mono">03</span>One beat</a>
+      <a href="#vectors"><span class="mono">04</span>Vectors</a>
+      <a href="#leads"><span class="mono">05</span>Leads</a>
+      <a href="#axis"><span class="mono">06</span>Axis</a>
+    </div>
+    <div class="navgrp"><span>Reading</span>
+      <a href="#method"><span class="mono">07</span>12 steps</a>
+      <a href="#rate"><span class="mono">08</span>Rate &amp; rhythm</a>
+      <a href="#parts"><span class="mono">09</span>Wave by wave</a>
+    </div>
+    <div class="navgrp"><span>Rhythms</span>
+      <a href="#tachy"><span class="mono">10</span>Tachycardias</a>
+      <a href="#blocks"><span class="mono">11</span>Heart block</a>
+    </div>
+    <div class="navgrp"><span>Patterns</span>
+      <a href="#mi"><span class="mono">12</span>Infarction</a>
+      <a href="#other"><span class="mono">13</span>Other patterns</a>
+      <a href="#clinic"><span class="mono">14</span>Clinical context</a>
+      <a href="#clash"><span class="mono">15</span>Card conflicts</a>
+    </div>
+  </nav>
+</aside>
+
+<main>
+<header class="hero">
+  <span class="eyebrow">MD3001 · Cardiovascular · built from your Anki</span>
+  <h1>ECG Crib Sheet</h1>
+  <p class="sub">Everything your ECG Interpretation, Physiological Properties, Ischaemic Heart Disease, Arrhythmias and Clinical Skills cards say about reading an ECG, with live tools to practise on.</p>
+  <div class="legend"><span><span class="memo">memorise</span> lecturer flagged it</span><span><span class="tag">not on your cards</span> standard reference added for a diagram</span></div>
+  <div class="paper herostrip" aria-hidden="true"><svg id="hero" viewBox="0 0 1000 84" preserveAspectRatio="none"></svg></div>
+  <div class="nums">
+    <a class="num" href="#paper"><span class="v">0.04 s</span><span class="l">1 small square</span></a>
+    <a class="num" href="#paper"><span class="v">0.2 s</span><span class="l">1 large square</span></a>
+    <a class="num" href="#rate"><span class="v">300 ÷ R–R</span><span class="l">Rate (large squares, regular)</span></a>
+    <a class="num" href="#beat"><span class="v">0.12–0.2 s</span><span class="l">PR interval</span></a>
+    <a class="num" href="#beat"><span class="v">&lt;0.12 s</span><span class="l">QRS width</span></a>
+    <a class="num" href="#parts"><span class="v">380–420 ms</span><span class="l">QTc (QT ÷ √RR)</span></a>
+    <a class="num" href="#axis"><span class="v">−30° to +90°</span><span class="l">Normal axis</span></a>
+    <a class="num" href="#mi"><span class="v">&gt;1 / &gt;2 mm</span><span class="l">ST elevation limb / chest</span></a>
+  </div>
+</header>
+
+<div class="part"><span>Live tools</span></div>
+
+<!-- MONITOR -->
+<section id="monitor">
+  <h2><span class="n">00</span>Rhythm monitor</h2>
+  <p class="lede">Pick a rhythm and it draws as a lead II strip. The window is 6 seconds (30 large squares), so QRS count × 10 is the rate. Use <b>Calipers</b> to measure any interval yourself, or <b>Quiz me</b> to name a mystery rhythm.</p>
+  <div class="tool">
+    <div class="toolhead">
+      <div><div class="toolname" id="mon-name">Sinus rhythm</div><div class="toolsub">Lead II · 25 mm/s · 10 mm/mV</div></div>
+      <div class="readout">
+        <div><span class="lbl">QRS in strip</span><span class="mono big" id="mon-count">–</span></div>
+        <div><span class="lbl">× 10 = rate</span><span class="mono big" id="mon-rate">–</span></div>
+      </div>
+    </div>
+    <div class="screen" id="mon-screen"><canvas id="mon-canvas" aria-label="Animated rhythm strip"></canvas><div class="calread" id="cal-read" hidden></div></div>
+    <div class="btnrow">
+      <button type="button" id="mon-pause" class="btn">Pause</button>
+      <button type="button" id="mon-cal" class="btn" aria-pressed="false">Calipers</button>
+      <button type="button" id="mon-quiz" class="btn" aria-pressed="false">Quiz me</button>
+      <span id="mon-score" class="mono muted" hidden></span>
+      <button type="button" id="mon-next" class="btn" hidden>Next mystery rhythm</button>
+    </div>
+    <div id="mon-feedback" class="callout" hidden></div>
+    <div id="mon-groups" style="display:grid;gap:8px"></div>
+    <div class="facts" id="mon-info"></div>
+  </div>
+</section>
+
+<!-- BEAT LAB -->
+<section id="lab">
+  <h2><span class="n">01</span>Beat lab</h2>
+  <p class="lede">One beat on true-scale paper (1 small square = 0.04 s and 0.1 mV). Pick a condition and the beat morphs from normal; the faint grey trace stays as the normal reference. Interval readouts update live.</p>
+  <div class="tool">
+    <div class="toolhead">
+      <div><div class="toolname" id="lab-name">Normal beat</div><div class="toolsub" id="lab-lead">Lead II</div></div>
+      <div class="readout">
+        <div><span class="lbl">PR</span><span class="mono big" id="lab-pr">160</span></div>
+        <div><span class="lbl">QRS</span><span class="mono big" id="lab-qrs">80</span></div>
+        <div><span class="lbl">QT</span><span class="mono big" id="lab-qt">350</span></div>
+      </div>
+    </div>
+    <div class="plain" style="padding:6px"><svg id="lab-svg" class="beatsvg" viewBox="0 0 240 190" role="img" aria-label="Single beat"></svg></div>
+    <div id="lab-groups" style="display:grid;gap:8px"></div>
+    <div class="callout c-violet" id="lab-note"></div>
+  </div>
+</section>
+
+<div class="part"><span>Foundations</span></div>
+
+<!-- PAPER -->
+<section id="paper">
+  <h2><span class="n">02</span>Reading the paper</h2>
+  <div class="two">
+    <div class="paper fig">
+      <svg viewBox="0 0 360 230" role="img" aria-label="ECG paper scale">
+        <rect x="40" y="150" width="8" height="8" class="bg-red" stroke="var(--red)" stroke-width="1.5"/>
+        <rect x="120" y="70" width="40" height="40" fill="none" stroke="var(--blue)" stroke-width="2.5"/>
+        <line x1="40" y1="205" x2="240" y2="205" stroke="var(--green)" stroke-width="2"/>
+        <line x1="40" y1="199" x2="40" y2="211" stroke="var(--green)" stroke-width="2"/>
+        <line x1="240" y1="199" x2="240" y2="211" stroke="var(--green)" stroke-width="2"/>
+        <text x="140" y="224" text-anchor="middle" font-size="12" style="fill:var(--green)">5 large squares = 1 second</text>
+        <path d="M256 150 L264 150 L264 70 L284 70 L284 150 L292 150" fill="none" stroke="var(--red)" stroke-width="2.5"/>
+        <text x="298" y="114" font-size="12" style="fill:var(--red)">10 mm</text><text x="298" y="129" font-size="12" style="fill:var(--red)">= 1 mV</text>
+        <line x1="44" y1="150" x2="44" y2="130" stroke="var(--red)" stroke-width="1.2"/>
+        <text x="20" y="124" font-size="12" style="fill:var(--red)">1 small = 0.04 s</text>
+        <text x="166" y="64" font-size="12" style="fill:var(--blue)">1 large = 0.2 s</text><text x="166" y="50" font-size="12" style="fill:var(--blue)">(5 small squares)</text>
+        <text x="40" y="20" font-size="12" style="fill:var(--muted)">Paper speed 25 mm/s</text>
+      </svg>
+      <p class="cap">Red: one small square. Blue: one large square. Green: one second. Red pulse: the 1 mV calibration mark.</p>
+    </div>
+    <div style="display:grid;gap:12px">
+      <div class="tbl"><table>
+        <tr><th>Unit</th><th>Time</th></tr>
+        <tr><td class="k">1 small square</td><td class="mono">0.04 s (40 ms) <span class="memo">memorise</span></td></tr>
+        <tr><td class="k">1 large square</td><td class="mono">0.2 s (200 ms) = 5 small</td></tr>
+        <tr><td class="k">5 large squares</td><td class="mono">1 s</td></tr>
+        <tr><td class="k">30 large squares</td><td class="mono">6 s</td></tr>
+      </table></div>
+      <div class="callout c-amber"><b class="t">Identity and standardisation (step 1)</b>Speed <b>25 mm/s</b>, voltage <b>10 mm = 1 mV</b>; a different speed or voltage changes the interpretation completely. Confirm name, age or date of birth and the date taken: these must be on it for it to be valid.</div>
+      <div class="callout c-green"><b class="t">Electrodes</b>4 on the limbs (the earth removes background noise) + 6 across the chest. The ECG records the <b>total, net</b> activity of the heart, never individual fibres.</div>
+    </div>
+  </div>
+</section>
+
+<!-- BEAT -->
+<section id="beat">
+  <h2><span class="n">03</span>One beat, part by part</h2>
+  <p class="lede">Click any part of the beat or the buttons below. The shaded band shows exactly where it starts and ends.</p>
+  <div class="tool">
+    <div class="plain" style="padding:6px"><svg id="bx-svg" class="beatsvg" viewBox="0 0 240 200" role="img" aria-label="Interactive PQRST beat"></svg></div>
+    <div class="btnrow" id="bx-btns"></div>
+    <div class="facts" id="bx-info" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))"></div>
+  </div>
+  <div class="callout c-violet"><b class="t">Linking to the action potential and contraction</b>A ventricular action potential maps as: upstroke at the QRS → calcium plateau between QRS and T (why the ST segment is flat) → repolarisation at the T wave. The ECG is electrical only, so you can't assume contraction from it, but each mechanical event always comes <i>after</i> its wave: P → atrial contraction, QRS → ventricular contraction, T → relaxation. Sinoatrial node to ventricles ≈ 0.15 s <span class="memo">memorise</span>.</div>
+</section>
+
+<!-- VECTORS -->
+<section id="vectors">
+  <h2><span class="n">04</span>Vectors: why waves go up or down</h2>
+  <p class="lede">Each lead has a "positive" end. It is only a convention (not a positive electrode like a battery): it is the end that reports.</p>
+  <div class="grid2">
+    <div class="paper fig"><svg viewBox="0 0 240 120" role="img" aria-label="Towards gives upward"><circle cx="200" cy="40" r="15" class="surf" stroke="var(--red)" stroke-width="2"/><text x="200" y="45" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--red)">+</text><line x1="30" y1="40" x2="170" y2="40" stroke="var(--blue)" stroke-width="3"/><path d="M170 32 L184 40 L170 48 Z" style="fill:var(--blue)"/><path class="tr" d="M60 105 L95 105 L105 112 L118 64 L130 105 L170 105"/></svg><p class="cap"><b class="ok">Towards</b> the positive end → trace goes <b>up</b>.</p></div>
+    <div class="paper fig"><svg viewBox="0 0 240 120" role="img" aria-label="Away gives downward"><circle cx="200" cy="40" r="15" class="surf" stroke="var(--red)" stroke-width="2"/><text x="200" y="45" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--red)">+</text><line x1="170" y1="40" x2="44" y2="40" stroke="var(--blue)" stroke-width="3"/><path d="M44 32 L30 40 L44 48 Z" style="fill:var(--blue)"/><path class="tr" d="M60 70 L95 70 L105 64 L118 112 L130 70 L170 70"/></svg><p class="cap"><b class="bad">Away</b> → trace goes <b>down</b>. Why P and QRS are inverted in aVR: it looks from the right shoulder and activity spreads away from it.</p></div>
+    <div class="paper fig"><svg viewBox="0 0 240 120" role="img" aria-label="Ninety degrees gives small"><circle cx="200" cy="40" r="15" class="surf" stroke="var(--red)" stroke-width="2"/><text x="200" y="45" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--red)">+</text><line x1="110" y1="10" x2="110" y2="60" stroke="var(--blue)" stroke-width="3"/><path d="M102 60 L110 74 L118 60 Z" style="fill:var(--blue)"/><path class="tr" d="M60 100 L98 100 L104 90 L112 110 L118 100 L170 100"/></svg><p class="cap"><b class="warn">At ~90°</b> → records little. The <b>smallest</b> angle (lead parallel to the event) gives the <b>biggest</b> signal.</p></div>
+  </div>
+  <div class="callout c-blue"><b class="t">So why 12 leads?</b>A lead at ~90° to an event sees little of it and the direction of activity shifts, so you need several viewpoints. Hypertrophy of one side shifts the net activity, so the ECG appears to rotate in the chest. Lead II is most in line with normal spread, hence the lead II rhythm strip.</div>
+</section>
+
+<!-- LEADS -->
+<section id="leads">
+  <h2><span class="n">05</span>The leads</h2>
+  <div class="two">
+    <div class="paper fig">
+      <svg viewBox="0 0 340 300" role="img" aria-label="Einthoven triangle">
+        <defs>
+          <marker id="aR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" style="fill:var(--red)"/></marker>
+          <marker id="aB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" style="fill:var(--blue)"/></marker>
+          <marker id="aG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" style="fill:var(--green)"/></marker>
+          <marker id="aV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 Z" style="fill:var(--violet)"/></marker>
+        </defs>
+        <line x1="72" y1="50" x2="266" y2="50" stroke="var(--red)" stroke-width="3" marker-end="url(#aR)"/>
+        <line x1="66" y1="62" x2="162" y2="246" stroke="var(--blue)" stroke-width="3" marker-end="url(#aB)"/>
+        <line x1="274" y1="62" x2="178" y2="246" stroke="var(--green)" stroke-width="3" marker-end="url(#aG)"/>
+        <g stroke="var(--violet)" stroke-width="2" stroke-dasharray="5 4"><line x1="170" y1="130" x2="76" y2="60" marker-end="url(#aV)"/><line x1="170" y1="130" x2="264" y2="60" marker-end="url(#aV)"/><line x1="170" y1="130" x2="170" y2="244" marker-end="url(#aV)"/></g>
+        <path d="M170 150 C150 128 140 108 160 104 C166 103 170 110 170 114 C170 110 174 103 180 104 C200 108 190 128 170 150 Z" class="bg-red" stroke="var(--red)" stroke-width="1.5"/>
+        <circle cx="60" cy="50" r="13" class="surf" stroke="var(--fg)" stroke-width="1.5"/><text x="60" y="55" text-anchor="middle" font-size="11" font-weight="700">RA</text>
+        <circle cx="280" cy="50" r="13" class="surf" stroke="var(--fg)" stroke-width="1.5"/><text x="280" y="55" text-anchor="middle" font-size="11" font-weight="700">LA</text>
+        <circle cx="170" cy="262" r="13" class="surf" stroke="var(--fg)" stroke-width="1.5"/><text x="170" y="267" text-anchor="middle" font-size="11" font-weight="700">LL</text>
+        <text x="170" y="38" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--red)">Lead I</text>
+        <text x="74" y="170" font-size="13" font-weight="700" style="fill:var(--blue)">Lead II</text>
+        <text x="232" y="170" font-size="13" font-weight="700" style="fill:var(--green)">Lead III</text>
+        <text x="104" y="104" font-size="11.5" font-weight="700" style="fill:var(--violet)">aVR</text>
+        <text x="216" y="104" font-size="11.5" font-weight="700" style="fill:var(--violet)">aVL</text>
+        <text x="176" y="214" font-size="11.5" font-weight="700" style="fill:var(--violet)">aVF</text>
+      </svg>
+      <p class="cap">Arrowheads = each lead's positive end. Solid: 3 limb leads. Dashed: 3 augmented vector leads from the same electrodes, looking out from the centre to each limb.</p>
+    </div>
+    <div style="display:grid;gap:12px">
+      <div class="tbl"><table>
+        <tr><th>Lead</th><th>From → to (positive)</th></tr>
+        <tr><td class="k" style="color:var(--red)">I</td><td>Right arm → <b>left arm</b></td></tr>
+        <tr><td class="k" style="color:var(--blue)">II</td><td>Right arm → <b>left leg</b></td></tr>
+        <tr><td class="k" style="color:var(--green)">III</td><td>Left arm → <b>left leg</b></td></tr>
+        <tr><td class="k" style="color:var(--violet)">aVR · aVL · aVF</td><td>Augmented vector right · left · foot</td></tr>
+      </table></div>
+      <div class="callout c-blue"><b class="t">Two planes</b><b>Limb leads</b> (I, II, III, aVR, aVL, aVF): <b>vertical</b> cross-section. <b>Chest leads</b> (V1–V6): <b>horizontal</b> cross-section. 3 limb electrodes give 6 viewpoints.</div>
+      <div class="leads" aria-label="12-lead layout by territory">
+        <div class="lead L-lat">I<small>lateral</small></div><div class="lead L-avr">aVR<small>always negative</small></div><div class="lead L-ant">V1<small>anterior</small></div><div class="lead L-ant">V4<small>anterior</small></div>
+        <div class="lead L-inf">II<small>inferior</small></div><div class="lead L-lat">aVL<small>lateral</small></div><div class="lead L-ant">V2<small>anterior</small></div><div class="lead L-lat">V5<small>lateral</small></div>
+        <div class="lead L-inf">III<small>inferior</small></div><div class="lead L-inf">aVF<small>inferior</small></div><div class="lead L-ant">V3<small>anterior</small></div><div class="lead L-lat">V6<small>lateral</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="two">
+    <figure class="paper fig" style="margin:0"><img src="data:image/jpeg;base64,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zHuTzWvRQBm2PhvRtLupLuw0nT7S4lJLywW6I7k9ckDJrRApaKACiiigAooooAKKKKAK10Yw672iBx/HHuqHdB/ftv8Avz/9epL2S5R1ENvPKMcmN0UD/vqq/n33/Pjef9/Yv8aVylFv/h0SboP79t/35/8Ar0VH599/z43n/f2L/Gii4+R+X3of+7/u2P8A31/9aj93/dsf++v/AK1Sbpf+esn/AH4o3S/89ZP+/FMgfa7d7bRbjj/lmcmrNQW5csdzswx3j21PQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACUZFYHjPVrzS9Nt4tOaNL+/u4rK3eRdyxs55cjvtUMce1YHg3x3fa7feLdEuooTfeGpRbfaFGBdExlhIU6LkjoKAO9LKD9ahub60s033NzBAv96Vwo/WvINO8RXXjX4leBJJJSsdn4en1q6SIkI0su2JQR7fMRn3rnvhRoOmfGW/13xX4/srbVbk37WWnQTMRFHDEOdkYOD94ZPrQB9DRyRyorxsrowyrKcgj1BpTUNjY2+nWsVraRJBbwoI4okGFRQMAAelT0WASlxRiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooArXW3eu4W54/5aHBqD93/dsf++v/AK1WbguGG12UY7R7qi3S/wDPWT/vxQBH+7/u2P8A31/9aipN0v8Az1k/78UUAGD7f+BB/wAKMH2/8CD/AIUzdB/ftv8Avz/9ejdB/ftv+/P/ANegCxb53HOOn/PUtU9VrUxl22NETj+CPbVmgAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOX8bm4tv7H1KLTrvUI7G+E00NrH5koUxuoZV74LD881598K9M1PQfir4kt9ajK3uv6dDrM6dVicyupiBHB2gqM+1e00wwoZfN2J5m3buxzj0z6UAfPnwX3/8JT40Tynjk0PSY9JwRjBSSduPbG2ul/Zd0Cys/hdYautun27UJJ5JZiMsR5rAL7DjoK9Ks/Cmkafd6reWljFBcauQ19ImQZyFKgn3we1R+DPCOn+BfDdn4e0ozGztAwjM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" alt="Lecture localisation slide: both lead planes around the heart with coronary territories coloured" style="display:block;width:100%;border-radius:4px"><figcaption class="cap">Your localisation slide (ECG Interpretation, slide 55).</figcaption></figure>
+    <div style="display:grid;gap:10px">
+      <p>The <b>big circle</b> is the limb leads' vertical plane: aVR up-left, aVL up-right, I across, II, aVF and III below. The <b>tilted ellipse</b> is the chest leads' horizontal plane, V1 → V6 round the front. Each coloured arc is where those leads see one artery's territory.</p>
+      <div class="callout c-amber"><b class="t">Yellow · anterior · left anterior descending</b>V2–V5 (lecturer) · V1–V4 (Ischaemic Heart Disease deck)</div>
+      <div class="callout c-violet"><b class="t">Pink · lateral · circumflex</b><span class="mono">I, aVL, V5, V6</span></div>
+      <div class="callout c-blue"><b class="t">Blue · inferior · right coronary artery</b><span class="mono">II, III, aVF</span></div>
+      <p class="cap">V7–V9 (back) and V4R (right side) are drawn on the slide only. No standard lead faces the back, which is why posterior infarction is read as a mirror image in V1.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AXIS -->
+<section id="axis">
+  <h2><span class="n">06</span>Cardiac axis</h2>
+  <p class="lede"><b>Definition:</b> sum of all ventricular forces during ventricular depolarisation, i.e. the average direction of the QRS. <b>Normal: −30° to +90°</b>.</p>
+  <div class="tool">
+    <div class="toolhead"><div><div class="toolname">Axis explorer</div><div class="toolsub">Drag the slider, drag on the wheel, or pick a preset</div></div></div>
+    <div class="ax">
+      <div class="paper fig ax-wheel">
+        <svg id="ax-svg" viewBox="10 10 300 300" role="img" aria-label="Hexaxial wheel, click to set axis">
+          <path d="M160 160 L263.92 100 A120 120 0 0 1 160 280 Z" class="bg-green"/>
+          <path d="M160 160 L160 280 A120 120 0 0 1 40 160 Z" class="bg-blue"/>
+          <path d="M160 160 L40 160 A120 120 0 0 1 160 40 Z" class="bg-red"/>
+          <path d="M160 160 L160 40 A120 120 0 0 1 263.92 100 Z" class="bg-amber"/>
+          <circle cx="160" cy="160" r="120" fill="none" stroke="var(--line)" stroke-width="1.5"/>
+          <g stroke-width="1.2" opacity=".75">
+            <line x1="40" y1="160" x2="280" y2="160" stroke="var(--fg)"/>
+            <line x1="100" y1="56.08" x2="220" y2="263.92" stroke="var(--fg)"/>
+            <line x1="220" y1="56.08" x2="100" y2="263.92" stroke="var(--fg)"/>
+            <line x1="160" y1="40" x2="160" y2="280" stroke="var(--fg)"/>
+            <line x1="56.08" y1="220" x2="263.92" y2="100" stroke="var(--violet)" stroke-dasharray="4 4"/>
+            <line x1="263.92" y1="220" x2="56.08" y2="100" stroke="var(--violet)" stroke-dasharray="4 4"/>
+          </g>
+          <g font-size="12" font-weight="700">
+            <text x="286" y="164">I 0°</text>
+            <text x="222" y="284">II +60°</text>
+            <text x="98" y="284" text-anchor="end">III +120°</text>
+            <text x="160" y="298" text-anchor="middle">aVF +90°</text>
+            <text x="268" y="94" style="fill:var(--violet)">aVL −30°</text>
+            <text x="52" y="94" text-anchor="end" style="fill:var(--violet)">aVR −150°</text>
+            <text x="34" y="164" text-anchor="end" style="fill:var(--muted)">±180</text>
+            <text x="160" y="32" text-anchor="middle" style="fill:var(--muted)">−90°</text>
+          </g>
+          <g id="ax-needle"><line x1="160" y1="160" x2="262" y2="160" stroke="var(--red)" stroke-width="4" stroke-linecap="round"/><path d="M256 151 L276 160 L256 169 Z" style="fill:var(--red)"/></g>
+          <circle cx="160" cy="160" r="6" style="fill:var(--red)"/>
+        </svg>
+        <p class="cap">Green normal · amber left · blue right · red extreme. 0° = patient's left; positive angles go downwards. <span class="tag">lead angles not on your cards</span></p>
+      </div>
+      <div class="ax-side">
+        <label for="ax-range" class="ax-label"><span>Axis</span><span class="mono big" id="ax-deg">+60°</span><span id="ax-zone" class="pill">Normal</span></label>
+        <input type="range" id="ax-range" min="-180" max="180" step="5" value="60">
+        <div class="btnrow" id="ax-presets">
+          <button type="button" class="btn" data-a="60">Normal +60°</button>
+          <button type="button" class="btn" data-a="-60">Left −60°</button>
+          <button type="button" class="btn" data-a="120">Right +120°</button>
+          <button type="button" class="btn" data-a="-150">Extreme −150°</button>
+        </div>
+        <div class="ax-leads" id="ax-leads"></div>
+        <p class="cap" id="ax-explain"></p>
+      </div>
+    </div>
+  </div>
+  <div class="two">
+    <div style="display:grid;gap:8px">
+      <h3>Quick method 1: leads I and aVF</h3>
+      <div class="quad">
+        <div class="h"></div><div class="h">aVF ↑</div><div class="h">aVF ↓</div>
+        <div class="h">I ↑</div><div style="background:var(--green-bg);border-color:var(--green)"><b class="ok">Normal</b></div><div style="background:var(--amber-bg);border-color:var(--amber)"><b class="warn">Left deviation</b><br><small>confirm: II also negative</small></div>
+        <div class="h">I ↓</div><div style="background:var(--blue-bg);border-color:var(--blue)"><b style="color:var(--blue)">Right deviation</b></div><div style="background:var(--red-bg);border-color:var(--red)"><b class="bad">Extreme deviation</b></div>
+      </div>
+    </div>
+    <div style="display:grid;gap:8px">
+      <h3>Quick method 2: leads I, II, III (lecture)</h3>
+      <div class="tbl"><table>
+        <tr><th>Axis</th><th>I</th><th>II</th><th>III</th></tr>
+        <tr><td class="k ok">Normal</td><td>↑</td><td>↑</td><td>↑</td></tr>
+        <tr><td class="k warn">Left</td><td>↑ dominant R</td><td class="bad">↓</td><td class="bad">↓</td></tr>
+        <tr><td class="k" style="color:var(--blue)">Right</td><td class="bad">↓ deep S</td><td>↑</td><td>↑</td></tr>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<div class="part"><span>Reading an ECG</span></div>
+
+<!-- METHOD -->
+<section id="method">
+  <h2><span class="n">07</span>The 12 steps</h2>
+  <p class="lede">Open a step for what to check; tick it off as you go when practising on a real ECG.</p>
+  <div class="progress" aria-hidden="true"><i id="chk-bar"></i></div>
+  <div class="check" id="chk"></div>
+  <div class="callout c-violet"><b class="t">Worked example: the 21-year-old pilot</b>Rate ~50–60 (R–R 5–6 large squares; 50, 54 or 60 accepted, 70 wrong) · irregular but sinus = <b>sinus arrhythmia</b> · P normal, PR 3–4 small squares · QRS 2.5–3 small squares, no S wave · no abnormal Q · R in V5 &gt;25 mm (heavy workouts, not hypertension) · ST slightly scooped but normal for him · T upright even in V1–V3 · normal axis → <b>normal ECG for this patient</b>.<p class="cap">Your Clinical Skills deck orders it slightly differently (rhythm before rate, ST before QT, axis at step 11). Either works if you're consistent.</p></div>
+</section>
+
+<!-- RATE -->
+<section id="rate">
+  <h2><span class="n">08</span>Rate and rhythm</h2>
+  <div class="grid2">
+    <div class="callout c-red"><b class="t">Regular rhythm</b><span class="mono">Rate = 300 ÷ large squares R–R</span>
+      <div class="tbl" style="margin-top:8px"><table>
+        <tr><th>R–R</th><th>Rate</th><th>R–R</th><th>Rate</th></tr>
+        <tr><td class="mono">1</td><td class="mono">300</td><td class="mono">5</td><td class="mono">60</td></tr>
+        <tr><td class="mono">2</td><td class="mono">150</td><td class="mono">6</td><td class="mono">50</td></tr>
+        <tr><td class="mono">3</td><td class="mono">100</td><td class="mono">7</td><td class="mono">43</td></tr>
+        <tr><td class="mono">4</td><td class="mono">75</td><td></td><td></td></tr>
+      </table></div></div>
+    <div class="callout c-amber"><b class="t">Irregular rhythm</b>QRS in 30 large squares (6 s) × 10 · or R waves on the 10 s strip × 6 · or average the rates from the shortest and longest R–R. Calculate rate and rhythm in <b>lead II</b>.</div>
+    <div class="callout c-green"><b class="t">Sinus rhythm <span class="memo">memorise</span></b>Normal P waves · normal narrow QRS · one P before every QRS · regular. The first three make it sinus; irregular can still be sinus (sinus arrhythmia).</div>
+    <div class="callout c-blue"><b class="t">Regular? Paper method</b>Mark 3 successive R waves on paper, slide along twice, check gaps match. A mismatch of ≤1 small square still counts.</div>
+  </div>
+  <p class="muted">Bradycardia &lt;60, tachycardia &gt;100 (arrhythmia lecture: bradycardia &lt;50, some use &lt;40; athletes at 30–40 are not pathological thanks to a large stroke volume).</p>
+</section>
+
+<!-- PARTS -->
+<section id="parts">
+  <h2><span class="n">09</span>Wave by wave: abnormal</h2>
+  <div class="tbl"><table>
+    <tr><th>Finding</th><th>Means</th></tr>
+    <tr><td class="k">No P waves</td><td>Atrial fibrillation; nodal (junctional) rhythm</td></tr>
+    <tr><td class="k">P mitrale (bifid, M-shaped)</td><td>Left atrial hypertrophy</td></tr>
+    <tr><td class="k">P pulmonale (peaked &gt;2.5 small sq)</td><td>Right atrial hypertrophy. Height measured vertically from the isoelectric line</td></tr>
+    <tr><td class="k">PR &gt;0.2 s</td><td>Delayed atrioventricular conduction (heart block)</td></tr>
+    <tr><td class="k">PR &lt;0.12 s + delta wave</td><td>Wolff–Parkinson–White</td></tr>
+    <tr><td class="k">QRS &gt;0.12 s</td><td>Ventricular conduction defect: bundle branch block</td></tr>
+    <tr><td class="k">QRS &lt;5 mm (low voltage)</td><td>Hypothyroidism · chronic obstructive airways disease · myocarditis · pericarditis / effusion (tamponade): looks "squashed"</td></tr>
+    <tr><td class="k">Significant Q</td><td>&gt;0.04 s and &gt;2 mm deep. Check the whole ECG, not just lead II. In lead III think pulmonary embolism <span class="memo">memorise</span></td></tr>
+    <tr><td class="k">ST elevation / depression</td><td>Infarction (complete blockage) / ischaemia (incomplete). See section 12</td></tr>
+    <tr><td class="k">T inverted in I, II, V4–V6</td><td>Ischaemia or infarction. Normal inversion only aVR, V1 (V2 in the young)</td></tr>
+  </table></div>
+  <div class="grid2">
+    <div class="callout c-blue"><b class="t">QTc <span class="memo">memorise</span></b><span class="mono">QTc = QT ÷ √RR</span> (Bazett). Use the R–R of the same beat. Normal 380–420 ms; prolonged &gt;0.42 s. Measure yourself: machines can be inaccurate. QT varies with rate, so it must be corrected.</div>
+    <div class="callout c-red"><b class="t">Prolonged QT: 8 causes <span class="memo">memorise</span></b>Acute myocardial ischaemia · myocarditis · bradycardia · head injury · hypothermia · low K⁺, Ca²⁺ or Mg²⁺ · congenital · drugs.</div>
+    <div class="callout c-amber"><b class="t">Hypertrophy</b><b>Left ventricular:</b> R in V5 &gt;25 mm (lecturer's choice) or S in V1 + R in V5/V6 &gt;35 mm (Sokolow–Lyon).<br><b>Right ventricular, all 3 <span class="memo">memorise</span>:</b> dominant R in V1 · T inversion V1–V3/V4 · deep S in V6.</div>
+  </div>
+</section>
+
+<div class="part"><span>Rhythms</span></div>
+
+<!-- TACHY -->
+<section id="tachy">
+  <h2><span class="n">10</span>Tachycardias</h2>
+  <div class="tool">
+    <div class="toolhead"><div><div class="toolname">Tachycardia sorter</div><div class="toolsub">Answer two questions; ▶ plays the rhythm in the monitor</div></div><button type="button" class="btn" id="tr-reset">Start again</button></div>
+    <div class="tree" id="tree"></div>
+  </div>
+  <div class="strips" id="tachy-strips"></div>
+  <div class="grid2">
+    <div class="callout c-red"><b class="t">VT or supraventricular with aberration?</b>QRS &gt;140 ms, independent P waves, fusion beats → VT (cannon waves in the JVP). Broad complex + previous left ventricular damage → statistically VT. Fast and unwell: DC cardioversion either way.</div>
+    <div class="callout c-violet"><b class="t">Adenosine test</b>Blocks the AV node to unveil the rhythm. Transient slowing → flutter or atrial tachycardia · sinus rhythm restored → re-entry · no effect → wrong diagnosis (sinus tachycardia, or VT if broad).</div>
+    <div class="callout c-blue"><b class="t">Re-entry <span class="memo">memorise</span></b>Write "circus" for re-entrant tachycardia. AVNRT: circuit entirely around the AV node; P waves hidden in the QRS or retrograde in II, III, aVF. AVRT: over an accessory pathway and the AV node.</div>
+  </div>
+</section>
+
+<!-- BLOCKS -->
+<section id="blocks">
+  <h2><span class="n">11</span>Heart block</h2>
+  <p class="lede">Watch the P-to-QRS gap. Each strip is drawn from the same model as the monitor; ▶ plays it live.</p>
+  <div class="strips" id="block-strips"></div>
+  <div class="tbl"><table>
+    <tr><th>Block</th><th>Treatment</th></tr>
+    <tr><td class="k">1st degree</td><td>None (common, benign; e.g. beta blockers; can be normal with high vagal tone)</td></tr>
+    <tr><td class="k">Mobitz I</td><td>No symptoms → none; symptoms → bradycardia management</td></tr>
+    <tr><td class="k">Mobitz II</td><td>Pacemaker (may or may not need one)</td></tr>
+    <tr><td class="k">3rd degree</td><td>Pacemaker (can't keep giving adrenaline/atropine). Block in AV node → junctional escape 40–60, narrow; infranodal → ventricular 20–40, wide (won't respond to atropine)</td></tr>
+  </table></div>
+  <p class="muted">AV block causes: vagal activity · myocardial infarction · electrolyte abnormalities · degeneration of the conducting system.</p>
+</section>
+
+<div class="part"><span>Patterns</span></div>
+
+<!-- MI -->
+<section id="mi">
+  <h2><span class="n">12</span>Infarction</h2>
+  <p class="lede">Suspected acute coronary syndrome: the <b>ECG is the first and most important investigation</b> <span class="memo">memorise</span>. Non-diagnostic? Repeat it in ~10 minutes: it changes within minutes.</p>
+  <div class="tool">
+    <div class="toolhead"><div><div class="toolname">STEMI evolution</div><div class="toolsub">Drag through time</div></div><div class="mono big" id="evo-when">Onset</div></div>
+    <div class="plain" style="padding:6px"><svg id="evo-svg" class="beatsvg" viewBox="0 0 240 190" role="img" aria-label="Evolving STEMI beat"></svg></div>
+    <input type="range" id="evo-range" min="0" max="5" step="0.01" value="0" aria-label="Time since infarction">
+    <div class="stops" id="evo-stops"></div>
+    <div class="callout c-red" id="evo-note"></div>
+  </div>
+  <div class="tool">
+    <div class="toolhead"><div><div class="toolname">STEMI localiser</div><div class="toolsub">Pick a territory: red = ST elevation, blue = ST depression</div></div><div class="mono" id="loc-artery"></div></div>
+    <div class="btnrow" id="loc-btns"></div>
+    <div class="ecg12" id="loc-grid"></div>
+    <p class="cap" id="loc-note"></p>
+  </div>
+  <div class="grid2">
+    <div class="callout c-red"><b class="t">ST elevation = infarction</b>&gt;2 mm in 2 adjacent chest leads, or &gt;1 mm in 2 adjacent limb leads. Complete blockage → transmural (STEMI). Very high square elevation = tombstoning. Elevation in some leads with depression in others = reciprocal change.</div>
+    <div class="callout c-amber"><b class="t">ST depression</b>Incomplete blockage = ischaemia: angina (resolves) or NSTEMI (troponin raised; subendocardial). Exception: V1–V2 only = posterior infarction. Treadmill: isoelectric at rest → depressed on exercise.</div>
+    <div class="callout c-violet"><b class="t">Posterior <span class="memo">memorise</span></b>No lead faces the back: reciprocal changes in V1, ST depression + tall R. Usually right coronary artery.</div>
+    <div class="callout c-blue"><b class="t">Pulmonary embolism: S1 Q3 T3 <span class="memo">memorise</span></b>Large S in I · deep Q in III · inverted T in III. Only ~30%: needs a massive embolism (strain on the heart).</div>
+  </div>
+  <div class="tbl"><table>
+    <tr><th>Example ECGs from lecture</th><th>Q waves</th><th>ST / T</th></tr>
+    <tr><td class="k">Anterior</td><td class="mono">V2–V4</td><td>T inverted V4–V6; lateral and inferior spared</td></tr>
+    <tr><td class="k">Anterolateral</td><td class="mono">I, II, aVL, V3–V5</td><td>ST raised V2–V6; I, aVL, V6 involved (vs anterior)</td></tr>
+    <tr><td class="k">Inferior</td><td class="mono">III, aVF</td><td>ST raised II, III, aVF; depressed aVL, V6. Deep S / QS in V1–V2 is normal</td></tr>
+  </table></div>
+</section>
+
+<!-- OTHER -->
+<section id="other">
+  <h2><span class="n">13</span>Other patterns</h2>
+  <div class="two">
+    <div class="paper fig">
+      <svg viewBox="0 0 320 140" role="img" aria-label="Bundle branch block shapes">
+        <text x="80" y="18" text-anchor="middle" font-size="12" font-weight="700">V1</text><text x="240" y="18" text-anchor="middle" font-size="12" font-weight="700">V6</text>
+        <text x="4" y="58" font-size="11" font-weight="700" style="fill:var(--blue)">RBBB</text>
+        <path class="tr" d="M50 60 L62 60 L68 32 L76 54 L86 24 L96 64 L110 60" style="stroke:var(--blue)"/>
+        <path class="tr" d="M210 60 L220 60 L226 70 L232 36 L240 74 L250 54 L262 72 L270 60" style="stroke:var(--blue)"/>
+        <text x="4" y="118" font-size="11" font-weight="700" style="fill:var(--amber)">LBBB</text>
+        <path class="tr" d="M50 110 L60 110 L66 124 L74 100 L82 132 L92 106 L100 124 L110 110" style="stroke:var(--amber)"/>
+        <path class="tr" d="M210 110 L220 110 L226 82 L234 98 L244 76 L254 114 L270 110" style="stroke:var(--amber)"/>
+        <text x="122" y="56" font-size="11" style="fill:var(--muted)">M (RSR′)</text><text x="276" y="56" font-size="11" style="fill:var(--muted)">W</text>
+        <text x="122" y="116" font-size="11" style="fill:var(--muted)">W</text><text x="276" y="100" font-size="11" style="fill:var(--muted)">M</text>
+      </svg>
+      <p class="cap"><b>MaRRoW</b>: right bundle branch block = M in V1, W in V6. <b>WiLLiaM</b>: left = W in V1, M in V6. Both QRS &gt;0.12 s. R′ = second positive deflection.</p>
+    </div>
+    <div class="tbl"><table>
+      <tr><th>Condition</th><th>ECG</th></tr>
+      <tr><td class="k">Hyperkalaemia</td><td>Tall tented T · widened QRS</td></tr>
+      <tr><td class="k">Hypokalaemia</td><td>Small T · prominent U. GS mnemonic adds long PR, long QT, ST depression, small P: <i>"U have no Pot and no T, but a long PR and a long QT"</i></td></tr>
+      <tr><td class="k">Hypercalcaemia</td><td>Short QT</td></tr>
+      <tr><td class="k">Hypocalcaemia</td><td>Long QT · small T</td></tr>
+      <tr><td class="k">Digoxin</td><td>T inversion · sloping, tick-shaped ST depression</td></tr>
+      <tr><td class="k">WPW</td><td>Short PR · delta wave · broad QRS</td></tr>
+      <tr><td class="k">Long QT syndrome</td><td>Not just long but "odd": odd ST, too-wide T → torsade risk</td></tr>
+      <tr><td class="k">Brugada</td><td>Inherited; very typical V1 pattern, "nothing else looks like that"</td></tr>
+      <tr><td class="k">Pulseless electrical activity</td><td>Electrical activity, no pulse (e.g. large pulmonary embolism)</td></tr>
+    </table></div>
+  </div>
+  <p class="muted">Every row above with a single-beat change can be seen morphing in the <a href="#lab" style="color:var(--red)">Beat lab</a>.</p>
+</section>
+
+<!-- CLINIC -->
+<section id="clinic">
+  <h2><span class="n">14</span>Clinical context</h2>
+  <p class="lede">The cards that sit around ECG reading in your Ischaemic Heart Disease and Arrhythmias decks.</p>
+  <div class="filter" id="cc-filter"></div>
+  <div class="cards" id="cc-cards"></div>
+</section>
+
+<!-- CLASH -->
+<section id="clash">
+  <h2><span class="n">15</span>Where your cards disagree</h2>
+  <div class="tbl"><table>
+    <tr><th>Topic</th><th>Card A</th><th>Card B</th><th>Use</th></tr>
+    <tr><td class="k">Bradycardia</td><td>&lt;60 (ECG Interpretation)</td><td>&lt;50, some &lt;40 (Arrhythmias)</td><td>&lt;60 unless the arrhythmia lecturer is examining</td></tr>
+    <tr><td class="k">QTc upper limit</td><td>420 ms</td><td>&lt;0.44 s (Arrhythmias slide)</td><td>420 ms for ECG questions</td></tr>
+    <tr><td class="k">Posterior infarction</td><td>ST depression V1–V2; tall R in V1</td><td>ST depression V1–V4 (older card)</td><td>V1–V2 (lecture)</td></tr>
+    <tr><td class="k">Anterior leads</td><td>V1–V4 (Ischaemic Heart Disease)</td><td>V2–V5 (ECG lecturer)</td><td>"Precordial leads, V1–V4"</td></tr>
+  </table></div>
+</section>
+
+<footer>Built from 200+ ECG-related notes in your Anki collection, October 2026. Traces are generated from a simplified model for learning patterns, not real recordings. Lead angles on the axis wheel are standard reference added for the diagram.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(id){return document.getElementById(id);};
+function g(t,c,s,a){var d=t-c;return a*Math.exp(-d*d/(2*s*s));}
+function sm(t,a,b){var x=Math.max(0,Math.min(1,(t-a)/(b-a)));return x*x*(3-2*x);}
+var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ===== single-beat model (true scale: 250 units/s, 100 units/mV) ===== */
+var N0={p:.15,pw:1,p2:0,pr:.16,q:-.1,r:1.2,s:-.3,qw:1,rp:0,delta:0,st:0,dig:0,qt:.24,t:.3,tw:1,u:0,inv:1};
+function P(o){var r={};for(var k in N0)r[k]=N0[k];for(k in o)r[k]=o[k];return r;}
+function beatY(B,t){var q0=0.03+B.pr,w=B.qw,y=0;
+  y+=g(t,0.08,0.022*B.pw,B.p); if(B.p2)y+=g(t,0.125,0.017,B.p2);
+  y+=g(t,q0+0.012*w,0.006*w,B.q)+g(t,q0+0.035*w,0.009*w,B.r)+g(t,q0+0.06*w,0.008*w,B.s);
+  if(B.rp)y+=g(t,q0+0.1*w,0.011*w,B.rp);
+  if(B.delta)y+=B.delta*sm(t,q0-0.005,q0+0.035)*(1-sm(t,q0+0.035,q0+0.06));
+  var j=q0+(B.rp>0.05?0.12:0.075)*w,tc=q0+B.qt;
+  if(B.st)y+=B.st*sm(t,j-0.012,j+0.008)*(1-sm(t,tc-0.01,tc+0.09));
+  if(B.dig){var a=j,b=tc+0.03;if(t>a&&t<b){var x=(t-a)/(b-a);y-=B.dig*Math.sin(Math.PI*Math.pow(x,0.6));}}
+  y+=g(t,tc,0.05*B.tw,B.t); if(B.u)y+=g(t,tc+0.17,0.035,B.u);
+  return y*B.inv;}
+var XS=250,YS=100;
+function beatPath(B,x0,base,T){var d="";for(var i=0;i<=T*XS;i+=0.5){var t=i/XS;d+=(i?" L":"M")+(x0+i).toFixed(1)+" "+(base-beatY(B,t)*YS).toFixed(1);}return d;}
+var gridN=0;
+function gridDefs(svg){var id="gp"+(gridN++);return {id:id,html:'<defs><pattern id="'+id+'" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" style="fill:var(--surface)"/><path d="M10 0V50M20 0V50M30 0V50M40 0V50M0 10H50M0 20H50M0 30H50M0 40H50" style="stroke:var(--grid-minor)" stroke-width=".6"/><path d="M0 0V50M0 0H50" style="stroke:var(--grid-major)" stroke-width="1"/></pattern></defs>'};}
+function measures(B){var w=B.qw;return {pr:Math.round(B.pr*1000),qrs:Math.round((B.rp>0.05?0.12:0.08)*w*1000+(B.delta?20:0)),qt:Math.round((B.qt+0.11*B.tw)*1000)};}
+function lerp(A,Bo,k){var r={};for(var x in N0)r[x]=A[x]+(Bo[x]-A[x])*k;return r;}
+
+/* ===== hero ===== */
+(function(){var h=$("hero"),d="M0 58";for(var i=0;i<9;i++){var s=20+i*112;d+=" L"+s+" 58 Q"+(s+9)+" 46 "+(s+18)+" 58 L"+(s+34)+" 58 L"+(s+38)+" 64 L"+(s+44)+" 10 L"+(s+50)+" 70 L"+(s+54)+" 58 L"+(s+72)+" 58 Q"+(s+84)+" 38 "+(s+96)+" 58";}d+=" L1000 58";h.innerHTML='<path class="tr" vector-effect="non-scaling-stroke" style="stroke:var(--red)" d="'+d+'"/>';})();
+
+/* ===== rhythm model ===== */
+var LOOP=30,WIN=6;
+function rngF(seed){var s=seed;return function(){s=(s*9301+49297)%233280;return s/233280;};}
+function sinus(rate,pr,opts){opts=opts||{};return function(){var ev=[],t=0.25;while(t<LOOP-0.5){var rr=opts.rrFn?opts.rrFn(t):60/rate;ev.push({t:t,k:"P"});ev.push({t:t+pr,k:"N",rr:rr});t+=rr;}return ev;};}
+var R={
+ sinus:{name:"Sinus rhythm",gen:sinus(75,0.16),rate:"60–100",reg:"Regular",p:"Upright, one before every QRS",pr:"0.12–0.2 s, constant",qrs:"Narrow (&lt;0.12 s)",key:["Normal P waves","Normal narrow QRS","One P followed by one QRS","Regular <span class='memo'>memorise</span>"]},
+ arr:{name:"Sinus arrhythmia",gen:sinus(0,0.16,{rrFn:function(t){return 1.05+0.22*Math.sin(2*Math.PI*t/4.6);}}),rate:"Varies (pilot: 50–60)",reg:"Irregular",p:"Normal, one per QRS",pr:"Constant",qrs:"Narrow",key:["Meets the sinus criteria but R–R varies","Still sinus: regularity is checked separately","Your example: 21-year-old pilot, normal for him"]},
+ brady:{name:"Sinus bradycardia",gen:sinus(45,0.17),rate:"&lt;60 (arrhythmia lecture &lt;50)",reg:"Regular",p:"Normal",pr:"Normal",qrs:"Narrow",key:["Causes: beta blockers, diltiazem, ivabradine · vagal activity · hypothyroidism · sinus node disease · electrolytes","Athletes 30–40: bradycardic, not pathological","Pacemaker: symptoms (syncope, dizziness), prophylactic at operations, post acute MI"]},
+ tachy:{name:"Sinus tachycardia",gen:sinus(125,0.13),rate:"&gt;100",reg:"Regular",p:"Normal, one per QRS",pr:"Normal",qrs:"Narrow",key:["Regular narrow complex tachycardia","Adenosine: no effect → it was sinus (wrong diagnosis)"]},
+ af:{name:"Atrial fibrillation",gen:function(){var r=rngF(11),ev=[],t=0.3;while(t<LOOP-0.5){var rr=0.42+r()*0.8;ev.push({t:t,k:"N",rr:rr});t+=rr;}return ev;},base:function(t){return 0.045*Math.sin(2*Math.PI*6.3*t)+0.035*Math.sin(2*Math.PI*8.7*t+1)+0.025*Math.sin(2*Math.PI*11.3*t+2);},rate:"Variable",reg:"Irregularly irregular",p:"None: wiggly or flat baseline",pr:"None",qrs:"Narrow",key:["No discernible P waves","Irregularly irregular R–R","Irregular narrow complex tachycardia","Rate: QRS in 6 s × 10"]},
+ flutter:{name:"Atrial flutter (4:1)",gen:function(){var ev=[],t=0.37;while(t<LOOP-0.5){ev.push({t:t,k:"N",rr:0.8});t+=0.8;}return ev;},base:function(t){var f=(t%0.2)/0.2;return f<0.82?0.12-0.32*(f/0.82):-0.2+0.32*((f-0.82)/0.18);},rate:"Atria 300 · ventricles 75 here",reg:"Regular (fixed block)",p:"Sawtooth flutter waves 300/min",pr:"—",qrs:"Narrow",key:["Sawtooth baseline","4 flutter waves per QRS (also 2:1, 3:1)","Ventricles perfectly regular","Less serious than AF; adenosine → transient slowing reveals flutter waves"]},
+ junc:{name:"Junctional tachycardia",gen:function(){var ev=[],t=0.2;while(t<LOOP-0.5){ev.push({t:t,k:"N",rr:0.3});t+=0.3;}return ev;},rate:"~200",reg:"Regular",p:"Absent (hidden in QRS)",pr:"—",qrs:"Narrow",key:["Normal QRS, absent P waves","R–R 1.5 large squares ≈ 200","Re-entry (AVNRT) = \"circus\" movement <span class='memo'>memorise</span>"]},
+ wpw:{name:"Wolff–Parkinson–White",gen:function(){var ev=[],t=0.25;while(t<LOOP-0.5){ev.push({t:t,k:"P"});ev.push({t:t+0.1,k:"W",rr:0.8});t+=0.8;}return ev;},rate:"Normal at rest",reg:"Regular",p:"Present",pr:"Short &lt;0.12 s",qrs:"Broad &gt;0.12 s, delta wave",key:["Short PR","Delta wave: slurred QRS upstroke","Bundle of Kent bypasses the AV node → pre-excitation","Basis of AVRT: orthodromic (down AV node) narrow; antidromic (down accessory) broad"]},
+ pvc:{name:"Ventricular ectopics (trigeminy)",gen:function(){var ev=[],t=0.25,i=0;while(t<LOOP-0.5){if(i%3===2){ev.push({t:t-0.14,k:"B",rr:0.8});}else{ev.push({t:t,k:"P"});ev.push({t:t+0.16,k:"N",rr:0.8});}t+=0.8;i++;}return ev;},rate:"Underlying sinus",reg:"Regularly irregular",p:"Absent before ectopics",pr:"—",qrs:"Ectopics broad, bizarre",key:["Every 3rd beat = trigeminy (2nd = bigeminy)","Occasional ectopics are normal: thump or missed beat","More frequent → becomes VT-like"]},
+ vt:{name:"Ventricular tachycardia",gen:function(){var ev=[],t=0.2;while(t<LOOP-0.5){ev.push({t:t,k:"B",rr:0.37});t+=0.37;}return ev;},rate:"Fast (~160 here)",reg:"Regular (monomorphic)",p:"Not seen",pr:"—",qrs:"Broad &gt;3 small squares",key:["Broad, bizarre QRS; T waves hard to see","<b>Shockable</b> <span class='memo'>memorise</span>","Usually previous LV damage: MI, hypertensive disease, cardiomyopathy, heart surgery","Not always fast (beware slow VT); can degenerate into VF"]},
+ vf:{name:"Ventricular fibrillation",gen:function(){return [];},base:function(t){return 0.42*Math.sin(2*Math.PI*4.3*t)*(0.6+0.4*Math.sin(2*Math.PI*0.37*t))+0.22*Math.sin(2*Math.PI*6.1*t+1.3)+0.14*Math.sin(2*Math.PI*2.7*t+0.4);},rate:"None measurable",reg:"Chaotic",p:"None",pr:"—",qrs:"None identifiable",key:["Chaotic, often fine movements","Often (not always) preceded by VT","Shockable arrest rhythm"]},
+ tdp:{name:"Torsade de pointes",gen:function(){return [];},base:function(t){return Math.sin(2*Math.PI*4*t)*Math.sin(2*Math.PI*0.32*t)+0.08*Math.sin(2*Math.PI*8*t);},rate:"Very fast",reg:"Irregular",p:"None",pr:"—",qrs:"Broad, polymorphic",key:["Polymorphic VT in long QT","QRS twists around the baseline","Congenital provocations: adrenaline, facial immersion, exercise, hypokalaemia","Sudden death autopsy: normal heart"]},
+ deg1:{name:"1st degree AV block",gen:sinus(70,0.3),rate:"Normal",reg:"Regular",p:"One per QRS",pr:"&gt;0.2 s, constant",qrs:"Narrow",key:["\"If the R is far from P\"","PR &gt;1 large square, otherwise constant","Benign (e.g. beta blockers): no treatment"]},
+ m1:{name:"Mobitz I (Wenckebach)",gen:function(){var ev=[],t=0.25,i=0,prs=[0.16,0.27,0.37,0];while(t<LOOP-0.5){var pr=prs[i%4];ev.push({t:t,k:"P"});if(pr)ev.push({t:t+pr,k:"N",rr:0.85});t+=0.85;i++;}return ev;},rate:"Slightly slow",reg:"Irregular (grouped)",p:"Regular; one fails",pr:"Lengthens, then a drop",qrs:"Narrow",key:["\"Longer, longer, longer, drop\"","PR longest before the drop, shortest after","No symptoms → no treatment"]},
+ m2:{name:"Mobitz II",gen:function(){var ev=[],t=0.25,i=0;while(t<LOOP-0.5){ev.push({t:t,k:"P"});if(i%3!==2)ev.push({t:t+0.18,k:"N",rr:0.85});t+=0.85;i++;}return ev;},rate:"Slow",reg:"Irregular",p:"Regular; some don't conduct",pr:"Constant, no warning",qrs:"Often wide",key:["\"If some Ps don't get through\"","Dropped P without PR lengthening","Can be fixed 2:1 or 3:1","Pacemaker (may or may not need one)"]},
+ b21:{name:"2:1 AV block",gen:function(){var ev=[],t=0.25,i=0;while(t<LOOP-0.5){ev.push({t:t,k:"P"});if(i%2===0)ev.push({t:t+0.18,k:"N",rr:1.2});t+=0.6;i++;}return ev;},rate:"Half the atrial rate",reg:"Regular",p:"Two per QRS",pr:"Constant in conducted beats",qrs:"Narrow",key:["Every second P is blocked","A fixed form of 2nd degree block"]},
+ chb:{name:"3rd degree (complete) block",gen:function(){var ev=[],t=0.1;while(t<LOOP-0.5){ev.push({t:t,k:"P"});t+=0.72;}t=0.55;while(t<LOOP-0.5){ev.push({t:t,k:"N",rr:1.4});t+=1.4;}return ev.sort(function(a,b){return a.t-b.t;});},rate:"Ventricles ~43 (escape)",reg:"Regular ventricles",p:"Regular, march through",pr:"Varies: no relationship",qrs:"Narrow (junctional escape)",key:["\"If Ps and Qs don't agree\"","Complete AV dissociation; atrial rate &gt; ventricular","Junctional escape 40–60 narrow · ventricular 20–40 wide","Pacemaker"]},
+ asys:{name:"Asystole",gen:function(){return [];},base:function(t){return 0.015*Math.sin(2*Math.PI*0.3*t)+0.006*Math.sin(2*Math.PI*7*t);},rate:"0",reg:"—",p:"None",pr:"—",qrs:"None",key:["No electrical activity","On a continuous ECG it supplements recognition of death in hospital"]}
+};
+var ORDER=["sinus","arr","brady","tachy","af","flutter","junc","wpw","pvc","vt","vf","tdp","deg1","m1","m2","b21","chb","asys"];
+ORDER.forEach(function(k){R[k].ev=R[k].gen();});
+function rbeat(t,e){var d=t-e.t,y=0;if(d<-0.4||d>0.9)return 0;var rr=e.rr||0.8,tT=Math.min(0.3,0.42*rr);
+  if(e.k==="P")return g(t,e.t+0.05,0.022,0.16);
+  if(e.k==="N")return g(t,e.t+0.01,0.006,-0.12)+g(t,e.t+0.035,0.009,1.25)+g(t,e.t+0.06,0.008,-0.3)+g(t,e.t+tT,0.05*Math.min(1,rr/0.8)+0.015,0.3);
+  if(e.k==="W")return g(t,e.t+0.03,0.025,0.35)+g(t,e.t+0.075,0.01,1.0)+g(t,e.t+0.1,0.01,-0.25)+g(t,e.t+0.36,0.055,0.28);
+  if(e.k==="B"){var tb=Math.min(0.38,0.6*rr);return g(t,e.t+0.06,0.032,1.1)+g(t,e.t+0.15,0.035,-0.55)+g(t,e.t+tb,0.07*Math.min(1,rr/0.6),-0.38);}
+  return 0;}
+function sig(r,t){var ev=r.ev,y=r.base?r.base(t):0,lo=0,hi=ev.length;while(lo<hi){var m=(lo+hi)>>1;if(ev[m].t<t-0.9)lo=m+1;else hi=m;}for(var i=lo;i<ev.length&&ev[i].t<t+0.4;i++)y+=rbeat(t,ev[i]);return y;}
+
+/* ===== monitor ===== */
+var cv=$("mon-canvas"),ctx=cv.getContext("2d");
+var cur="sinus",paused=false,clock=0,last=null,quiz=false,mystery=null,answered=false,score=0,tries=0,cal=false,calPts=[];
+var C={},cf=0;
+function colors(){var s=getComputedStyle(document.documentElement);["grid-minor","grid-major","surface","trace","red","blue"].forEach(function(k){C[k]=s.getPropertyValue("--"+k).trim();});}
+function size(){var r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;cv.width=Math.max(1,Math.round(r.width*d));cv.height=Math.max(1,Math.round(r.height*d));}
+function geom(){var W=cv.width,H=cv.height,pxs=W/WIN,sq=pxs*0.04;return {W:W,H:H,pxs:pxs,sq:sq,mv:sq*10,base:H*0.62};}
+function draw(){
+  if(cf++%30===0)colors();var G=geom(),W=G.W,H=G.H,sq=G.sq;
+  ctx.fillStyle=C.surface;ctx.fillRect(0,0,W,H);ctx.lineWidth=1;
+  if(sq>=3.5){ctx.strokeStyle=C["grid-minor"];ctx.beginPath();for(var x=0;x<=W;x+=sq){ctx.moveTo(Math.round(x)+.5,0);ctx.lineTo(Math.round(x)+.5,H);}for(var y=G.base%sq;y<=H;y+=sq){ctx.moveTo(0,Math.round(y)+.5);ctx.lineTo(W,Math.round(y)+.5);}ctx.stroke();}
+  ctx.strokeStyle=C["grid-major"];ctx.beginPath();for(x=0;x<=W;x+=sq*5){ctx.moveTo(Math.round(x)+.5,0);ctx.lineTo(Math.round(x)+.5,H);}for(y=G.base%(sq*5);y<=H;y+=sq*5){ctx.moveTo(0,Math.round(y)+.5);ctx.lineTo(W,Math.round(y)+.5);}ctx.stroke();
+  var r=R[quiz&&mystery?mystery:cur],still=reduce||cal;
+  var tNow=still?Math.max(clock,WIN):clock,cyc=Math.floor(tNow/WIN)*WIN,sx=still?W:((tNow-cyc)/WIN)*W,gap=W*0.025;
+  if(still){cyc=tNow-WIN;sx=W;}
+  ctx.strokeStyle=C.trace;var dpr=window.devicePixelRatio||1;ctx.lineWidth=1.7*dpr;ctx.lineJoin="round";ctx.beginPath();var started=false;
+  for(var px=0;px<W;px++){var ahead=px>sx;if(ahead&&px<sx+gap){started=false;continue;}var tt=(ahead?cyc-WIN:cyc)+px/G.pxs;if(tt<0){started=false;continue;}var yy=G.base-sig(r,((tt%LOOP)+LOOP)%LOOP)*G.mv;if(!started){ctx.moveTo(px,yy);started=true;}else ctx.lineTo(px,yy);}
+  ctx.stroke();
+  if(!still){ctx.fillStyle=C.red;ctx.beginPath();ctx.arc(sx,G.base-sig(r,((tNow%LOOP)+LOOP)%LOOP)*G.mv,Math.max(3,sq*0.6),0,7);ctx.fill();}
+  if(cal&&calPts.length){ctx.strokeStyle=C.blue;ctx.lineWidth=2*dpr;ctx.setLineDash([6*dpr,4*dpr]);calPts.forEach(function(p){ctx.beginPath();ctx.moveTo(p*W,0);ctx.lineTo(p*W,H);ctx.stroke();});ctx.setLineDash([]);
+    if(calPts.length===2){ctx.fillStyle=C.blue;ctx.globalAlpha=.12;ctx.fillRect(Math.min(calPts[0],calPts[1])*W,0,Math.abs(calPts[1]-calPts[0])*W,H);ctx.globalAlpha=1;}}
+  var a=cyc-WIN+sx/G.pxs,b=a+WIN,count=0;
+  r.ev.forEach(function(e){if(e.k==="P")return;for(var k=-1;k<=1;k++){var t2=e.t+(Math.floor(a/LOOP)+k)*LOOP;if(t2>=a&&t2<b)count++;}});
+  var noQ=(r===R.vf||r===R.tdp);
+  $("mon-count").textContent=noQ?"–":count;$("mon-rate").textContent=noQ?"–":count*10;}
+function loop(ts){if(last==null)last=ts;var dt=Math.min(0.1,(ts-last)/1000);last=ts;if(!paused&&!cal)clock+=dt;draw();requestAnimationFrame(loop);}
+var btns={},GR=[["Sinus",["sinus","arr","brady","tachy"]],["Atrial",["af","flutter"]],["Junctional",["junc","wpw"]],["Ventricular",["pvc","vt","vf","tdp"]],["Heart block",["deg1","m1","m2","b21","chb"]],["Arrest",["asys"]]];
+GR.forEach(function(gp){var row=document.createElement("div");row.className="grp";row.innerHTML='<span class="gl">'+gp[0]+'</span>';gp[1].forEach(function(k){var b=document.createElement("button");b.type="button";b.className="btn";b.textContent=R[k].name;b.addEventListener("click",function(){pick(k);});btns[k]=b;row.appendChild(b);});$("mon-groups").appendChild(row);});
+function info(k){var r=R[k];$("mon-info").innerHTML=[["Rate",r.rate],["Rhythm",r.reg],["P waves",r.p],["PR interval",r.pr],["QRS",r.qrs]].map(function(x){return '<div class="fact"><b class="t">'+x[0]+'</b>'+x[1]+'</div>';}).join("")+'<div class="fact wide"><b class="t">Key features</b><ul>'+r.key.map(function(x){return "<li>"+x+"</li>";}).join("")+'</ul></div>';}
+function showName(k){$("mon-name").textContent=R[k].name;$("mon-name").classList.remove("hidden-blur");$("mon-info").classList.remove("hidden-blur");info(k);}
+function mark(){ORDER.forEach(function(k){btns[k].classList.remove("on","right","wrong");btns[k].setAttribute("aria-pressed","false");});}
+function pick(k){
+  if(quiz){if(answered||!mystery)return;answered=true;tries++;var fb=$("mon-feedback");fb.hidden=false;
+    if(k===mystery){score++;btns[k].classList.add("right");fb.className="callout c-green";fb.innerHTML='<b class="t">Correct.</b>'+R[k].name+'.';}
+    else{btns[k].classList.add("wrong");btns[mystery].classList.add("right");fb.className="callout c-red";fb.innerHTML='<b class="t">Not quite.</b>This is <b>'+R[mystery].name+'</b>, not '+R[k].name+'. Compare the features below.';}
+    $("mon-score").textContent=score+" / "+tries;showName(mystery);$("mon-next").hidden=false;return;}
+  cur=k;mark();btns[k].classList.add("on");btns[k].setAttribute("aria-pressed","true");showName(k);clock=cal?WIN:0;last=null;calPts=[];calRead();draw();}
+window.__playRhythm=function(k){if(quiz)$("mon-quiz").click();pick(k);$("monitor").scrollIntoView({behavior:reduce?"auto":"smooth"});};
+function newMystery(){var pool=ORDER.filter(function(k){return k!==mystery;});mystery=pool[Math.floor(Math.random()*pool.length)];answered=false;mark();$("mon-name").textContent="Mystery rhythm";$("mon-info").classList.add("hidden-blur");$("mon-feedback").hidden=true;$("mon-next").hidden=true;clock=cal?WIN:0;last=null;draw();}
+$("mon-quiz").addEventListener("click",function(){quiz=!quiz;this.setAttribute("aria-pressed",quiz);this.textContent=quiz?"Stop quiz":"Quiz me";$("mon-score").hidden=!quiz;$("mon-score").textContent=score+" / "+tries;if(quiz)newMystery();else{mystery=null;$("mon-feedback").hidden=true;$("mon-next").hidden=true;pick(cur);}});
+$("mon-next").addEventListener("click",newMystery);
+$("mon-pause").addEventListener("click",function(){paused=!paused;this.textContent=paused?"Play":"Pause";});
+function calRead(){var el=$("cal-read");if(!cal){el.hidden=true;return;}el.hidden=false;
+  if(calPts.length<2){el.innerHTML=calPts.length?"Click the second point":"Click two points on the strip";return;}
+  var dt=Math.abs(calPts[1]-calPts[0])*WIN,ss=dt/0.04,ls=dt/0.2;
+  el.innerHTML='<b class="mono">'+dt.toFixed(2)+' s</b> · '+ss.toFixed(1)+' small · '+ls.toFixed(1)+' large<br>If R–R: 300 ÷ '+ls.toFixed(1)+' = <b class="mono">'+(ls>0?Math.round(300/ls):"–")+'</b>/min';}
+$("mon-cal").addEventListener("click",function(){cal=!cal;this.setAttribute("aria-pressed",cal);$("mon-screen").classList.toggle("cal",cal);if(cal&&clock<WIN)clock=WIN;calPts=[];calRead();draw();});
+cv.addEventListener("pointerdown",function(e){if(!cal)return;var r=cv.getBoundingClientRect(),f=(e.clientX-r.left)/r.width;if(calPts.length>=2)calPts=[];calPts.push(f);calRead();draw();});
+colors();size();window.addEventListener("resize",function(){size();draw();});
+if(window.matchMedia){var mq=matchMedia("(prefers-color-scheme: dark)");var onColorChange=mq.addEventListener?mq.addEventListener.bind(mq):mq.addListener.bind(mq);onColorChange("change",function(){colors();draw();});}
+new MutationObserver(function(){colors();draw();}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+pick("sinus");if(reduce){$("mon-pause").hidden=true;clock=WIN;draw();}else requestAnimationFrame(loop);
+
+/* ===== static strips from the rhythm model ===== */
+function stripSVG(k){var r=R[k],d="",base=58;for(var x=0;x<=600;x+=1){var t=0.2+x/100;d+=(x?" L":"M")+x+" "+(base-sig(r,t)*34).toFixed(1);}return '<svg viewBox="0 0 600 86" preserveAspectRatio="none"><path class="tr" vector-effect="non-scaling-stroke" d="'+d+'"/></svg>';}
+function strips(el,list){$(el).innerHTML=list.map(function(x){return '<div class="strip"><div><h3>'+R[x[0]].name+'</h3><p>'+x[1]+'</p><button type="button" class="btn" data-play="'+x[0]+'">▶ Play live</button></div><div class="paper s">'+stripSVG(x[0])+'</div></div>';}).join("");}
+strips("block-strips",[["sinus","Same short PR every beat."],["deg1","PR &gt;0.2 s but constant. <i>\"If the R is far from P.\"</i>"],["m1","PR lengthens, then a P drops, then PR resets. <i>\"Longer, longer, longer, drop.\"</i>"],["m2","PR constant, then a P drops with no warning. <i>\"If some Ps don't get through.\"</i>"],["b21","Every second P blocked."],["chb","P waves and QRS march independently. <i>\"If Ps and Qs don't agree.\"</i>"]]);
+strips("tachy-strips",[["af","No P waves, irregularly irregular."],["flutter","Sawtooth 300/min, here 4:1."],["vt","Broad, bizarre, fast. Shockable."],["tdp","Polymorphic VT twisting round the baseline."]]);
+document.addEventListener("click",function(e){var b=e.target.closest("[data-play]");if(b)window.__playRhythm(b.getAttribute("data-play"));});
+
+/* ===== beat lab ===== */
+var LAB={
+ normal:["Normal beat","Normal",{},"PR 0.12–0.2 s · QRS &lt;0.12 s · raw QT 0.25–0.35 s · ST isoelectric · T upright."],
+ hyperK:["Hyperkalaemia","Electrolytes",{t:.8,tw:.55,qw:1.7,p:.07},"<b>Tall, tented T waves</b> and a <b>widened QRS</b> <span class='memo'>memorise</span>."],
+ hypoK:["Hypokalaemia","Electrolytes",{t:.07,u:.2,st:-.06,pr:.22,p:.1,qt:.3},"<b>Small T</b>, <b>prominent U waves</b> <span class='memo'>memorise</span>. GS mnemonic adds long PR, long QT, ST depression, small P."],
+ hyperCa:["Hypercalcaemia","Electrolytes",{qt:.16},"<b>Short QT</b> <span class='memo'>memorise</span>."],
+ hypoCa:["Hypocalcaemia","Electrolytes",{qt:.36,t:.15},"<b>Long QT</b> and <b>small T</b> <span class='memo'>memorise</span>."],
+ dig:["Digoxin effect","Drugs",{dig:.2,t:-.07},"<b>Sloping, tick-shaped ST depression</b> and <b>T wave inversion</b>."],
+ longqt:["Long QT","Drugs",{qt:.4,tw:1.5,t:.25},"Not just long but \"odd\": odd ST segment, too-wide T. Prolonged = QTc &gt;0.42 s. Risk of torsade de pointes."],
+ deg1:["1st degree AV block","Conduction",{pr:.3},"<b>PR &gt;0.2 s</b> (&gt;1 large square), constant."],
+ wpw:["Wolff–Parkinson–White","Conduction",{pr:.09,delta:.4,qw:1.3},"<b>Short PR</b> &lt;0.12 s, <b>delta wave</b> (slurred upstroke), <b>broad QRS</b>."],
+ rbbb:["Right bundle branch block (V1)","Conduction",{r:.45,s:-.35,rp:.95,qw:1.05,t:-.1,q:0},"V1: <b>M shape (RSR′)</b>, QRS &gt;0.12 s. MaRRoW.","V1"],
+ lbbb:["Left bundle branch block (V6)","Conduction",{r:.85,rp:.9,s:0,q:0,qw:1.3,st:-.08,t:-.22},"V6: broad notched <b>M</b>, QRS &gt;0.12 s. WiLLiaM.","V6"],
+ pmit:["P mitrale","Atria",{p:.12,pw:.75,p2:.12,pr:.19},"<b>Bifid, M-shaped P</b>, normal height → <b>left</b> atrial hypertrophy."],
+ ppul:["P pulmonale","Atria",{p:.33,pw:.7},"<b>Peaked P &gt;2.5 small squares</b> → <b>right</b> atrial hypertrophy."],
+ stemi:["Acute STEMI","Ischaemia",{st:.42,t:.55},"<b>ST elevation</b> &gt;1 mm (limb) / &gt;2 mm (chest) in 2 adjacent leads."],
+ isch:["Ischaemia","Ischaemia",{st:-.15,t:.12},"<b>ST depression</b>: incomplete blockage (angina, NSTEMI)."],
+ tinv:["T wave inversion","Ischaemia",{t:-.3},"Abnormal in I, II, V4–V6 → ischaemia or infarction."],
+ qwave:["Pathological Q wave","Ischaemia",{q:-.45,r:.8},"<b>&gt;0.04 s and &gt;2 mm deep</b>: old infarction (permanent scar)."]
+};
+var labCur=P({}),labAnim=null,labSvg=$("lab-svg"),labG=gridDefs();
+function drawLab(B,key){var ref=beatPath(P({}),20,130,0.8);
+  labSvg.innerHTML=labG.html+'<rect x="0" y="0" width="240" height="190" fill="url(#'+labG.id+')"/>'+
+   '<line x1="0" y1="130" x2="240" y2="130" style="stroke:var(--muted)" stroke-width=".4" stroke-dasharray="2 2"/>'+
+   (key!=="normal"?'<path d="'+ref+'" fill="none" style="stroke:var(--muted)" stroke-width="1.2" opacity=".45"/>':'')+
+   (key==="ppul"?'<line x1="20" y1="105" x2="80" y2="105" style="stroke:var(--red)" stroke-width=".7" stroke-dasharray="3 2"/><text x="82" y="107" font-size="6.5" style="fill:var(--red);stroke-width:2px">2.5 small squares</text>':'')+
+   '<path d="'+beatPath(B,20,130,0.8)+'" fill="none" style="stroke:var(--red)" stroke-width="1.8" stroke-linejoin="round"/>'+
+   '<text x="232" y="184" text-anchor="end" font-size="6" style="fill:var(--muted);stroke-width:2px">1 small square = 0.04 s · 0.1 mV</text>';
+  var m=measures(B);
+  [["lab-pr",m.pr,m.pr<120||m.pr>200],["lab-qrs",m.qrs,m.qrs>=120],["lab-qt",m.qt,m.qt<250||m.qt>350]].forEach(function(x){var el=$(x[0]);el.textContent=x[1];el.style.color=x[2]?"var(--red)":"var(--fg)";});}
+function setLab(k){var L=LAB[k],target=P(L[2]),from=labCur,t0=null;
+  $("lab-name").textContent=L[0];$("lab-lead").textContent=(L[4]||"Lead II")+(k==="normal"?"":" · grey = normal");$("lab-note").innerHTML=L[3];
+  Object.keys(LAB).forEach(function(x){var b=document.querySelector('[data-lab="'+x+'"]');b.classList.toggle("on",x===k);b.setAttribute("aria-pressed",x===k);});
+  if(labAnim)cancelAnimationFrame(labAnim);
+  if(reduce){labCur=target;drawLab(target,k);return;}
+  function step(ts){if(t0==null)t0=ts;var p=Math.min(1,(ts-t0)/450),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;labCur=lerp(from,target,e);drawLab(labCur,k);if(p<1)labAnim=requestAnimationFrame(step);}
+  labAnim=requestAnimationFrame(step);}
+(function(){var cats={};Object.keys(LAB).forEach(function(k){(cats[LAB[k][1]]=cats[LAB[k][1]]||[]).push(k);});
+  Object.keys(cats).forEach(function(c){var row=document.createElement("div");row.className="grp";row.innerHTML='<span class="gl">'+c+'</span>';cats[c].forEach(function(k){var b=document.createElement("button");b.type="button";b.className="btn";b.textContent=LAB[k][0];b.setAttribute("data-lab",k);b.addEventListener("click",function(){setLab(k);});row.appendChild(b);});$("lab-groups").appendChild(row);});
+  setLab("normal");})();
+
+/* ===== beat explorer ===== */
+(function(){var svg=$("bx-svg"),G=gridDefs(),B=P({}),x0=20,base=125;
+  var q0=0.03+B.pr,j=q0+0.075,tc=q0+B.qt,tEnd=tc+0.11;
+  function X(t){return x0+t*XS;}
+  var Z={
+   P:{lab:"P wave",a:0.03,b:0.13,row:"wave",what:"Atrial depolarisation. Small because the atria are a small muscle mass.",norm:"&lt;0.25 mV (2.5 small squares); upright in II, III, aVF",ab:"Absent: AF, nodal rhythm · bifid: P mitrale · peaked: P pulmonale"},
+   PR:{lab:"PR interval",a:0.03,b:q0,row:"int",what:"Atrial → ventricular depolarisation. Start of P → <b>start</b> of Q (start of R if no Q).",norm:"0.12–0.2 s (3–5 small squares) <span class='memo'>memorise</span>",ab:"&gt;0.2 s: heart block · &lt;0.12 s + delta: WPW. Exam error: measuring to the <b>bottom</b> of Q"},
+   QRS:{lab:"QRS complex",a:q0,b:j,row:"wave",what:"Ventricular depolarisation. Large: big muscle mass via bundle branches and Purkinje fibres. Start of Q → end of S. First positive deflection is always R; a negative before R is Q.",norm:"0.06–0.12 s (&lt;3 small squares)",ab:"Broad: bundle branch block, VT · &lt;5 mm: low voltage · tall: hypertrophy"},
+   ST:{lab:"ST segment",a:j,b:tc-0.07,row:"wave",what:"End of ventricular depolarisation → start of repolarisation. Flat because of the calcium plateau.",norm:"Isoelectric (level with the line before P); its length doesn't matter",ab:"Elevated: infarction · depressed: ischaemia (V1–V2 only: posterior MI) · tick-shaped: digoxin"},
+   T:{lab:"T wave",a:tc-0.07,b:tEnd,row:"wave",what:"Ventricular repolarisation.",norm:"Upright; normally inverted only in aVR, V1 (V2 in the young)",ab:"Inverted I, II, V4–V6: ischaemia/infarction · tented: hyperkalaemia · small: hypokalaemia, hypocalcaemia"},
+   QT:{lab:"QT interval",a:q0,b:tEnd,row:"int2",what:"Start of QRS → <b>end</b> of T. Varies with rate, so correct it: QTc = QT ÷ √RR.",norm:"Raw 0.25–0.35 s · QTc 380–420 ms",ab:"Long: 8 causes (section 09), hypocalcaemia · short: hypercalcaemia. Exam error: measuring to the <b>top</b> of T"},
+   U:{lab:"U wave",a:tEnd+0.01,b:tEnd+0.12,row:"wave",what:"Small wave after T; not normally prominent.",norm:"Usually not seen",ab:"Prominent: hypokalaemia"}};
+  var BU=P({u:.06});var path=beatPath(BU,x0,base,0.85);
+  var html=G.html+'<rect width="240" height="200" fill="url(#'+G.id+')"/><g id="bx-hl"></g><path d="'+path+'" fill="none" style="stroke:var(--trace)" stroke-width="1.8" stroke-linejoin="round"/>';
+  var labels={P:[0.08,-24],QRS:[q0+0.035,-128],ST:[(j+tc-0.07)/2,-12],T:[tc,-40],U:[tEnd+0.06,-14]};
+  Object.keys(Z).forEach(function(k){var z=Z[k],y1,h;if(z.row==="wave"){y1=8;h=150;}else if(z.row==="int"){y1=158;h=16;}else{y1=176;h=16;}
+    html+='<g class="zone" tabindex="0" role="button" data-z="'+k+'" aria-label="'+z.lab+'"><rect x="'+X(z.a)+'" y="'+y1+'" width="'+(X(z.b)-X(z.a))+'" height="'+h+'" fill="transparent"/>';
+    if(z.row!=="wave")html+='<line x1="'+X(z.a)+'" y1="'+(y1+8)+'" x2="'+X(z.b)+'" y2="'+(y1+8)+'" style="stroke:var(--'+(k==="PR"?"green":"blue")+')" stroke-width="1.6"/><line x1="'+X(z.a)+'" y1="'+(y1+3)+'" x2="'+X(z.a)+'" y2="'+(y1+13)+'" style="stroke:var(--'+(k==="PR"?"green":"blue")+')" stroke-width="1.6"/><line x1="'+X(z.b)+'" y1="'+(y1+3)+'" x2="'+X(z.b)+'" y2="'+(y1+13)+'" style="stroke:var(--'+(k==="PR"?"green":"blue")+')" stroke-width="1.6"/><text x="'+(X(z.b)+3)+'" y="'+(y1+11)+'" font-size="7.5" font-weight="700" style="fill:var(--'+(k==="PR"?"green":"blue")+');stroke-width:2px">'+k+'</text>';
+    else{var L=labels[k];html+='<text x="'+X(L[0])+'" y="'+(base+L[1])+'" text-anchor="middle" font-size="9" font-weight="700" style="stroke-width:2px">'+k+'</text>';}
+    html+='</g>';});
+  svg.innerHTML=html;
+  function sel(k){var z=Z[k],hl=$("bx-hl");hl.innerHTML='<rect x="'+X(z.a)+'" y="6" width="'+(X(z.b)-X(z.a))+'" height="188" style="fill:var(--red)" opacity=".12"/><line x1="'+X(z.a)+'" y1="6" x2="'+X(z.a)+'" y2="194" style="stroke:var(--red)" stroke-width=".8" stroke-dasharray="2 2"/><line x1="'+X(z.b)+'" y1="6" x2="'+X(z.b)+'" y2="194" style="stroke:var(--red)" stroke-width=".8" stroke-dasharray="2 2"/>';
+    $("bx-info").innerHTML='<div class="fact wide" style="background:var(--red-bg);border-color:var(--red)"><b class="t" style="color:var(--red)">'+z.lab+'</b>'+z.what+'</div><div class="fact"><b class="t">Normal</b>'+z.norm+'</div><div class="fact"><b class="t">Abnormal means</b>'+z.ab+'</div>';
+    document.querySelectorAll("#bx-btns .btn").forEach(function(b){b.classList.toggle("on",b.dataset.z===k);b.setAttribute("aria-pressed",b.dataset.z===k);});}
+  $("bx-btns").innerHTML=Object.keys(Z).map(function(k){return '<button type="button" class="btn" data-z="'+k+'">'+Z[k].lab+'</button>';}).join("");
+  document.querySelectorAll("#bx-btns .btn").forEach(function(b){b.addEventListener("click",function(){sel(b.dataset.z);});});
+  svg.querySelectorAll(".zone").forEach(function(z){z.addEventListener("click",function(){sel(z.dataset.z);});z.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();sel(z.dataset.z);}});});
+  sel("PR");})();
+
+/* ===== axis explorer ===== */
+(function(){var LEADS=[["I",0],["II",60],["III",120],["aVR",-150],["aVL",-30],["aVF",90]],ax=$("ax-range");
+  LEADS.forEach(function(l){var d=document.createElement("div");d.className="ax-lead";d.id="axl-"+l[0];d.innerHTML='<svg viewBox="0 0 60 64"><line x1="0" y1="34" x2="60" y2="34" style="stroke:var(--line)"/><path class="tr" d=""/></svg><b>'+l[0]+'</b><small></small>';$("ax-leads").appendChild(d);});
+  function zone(a){if(a>=-30&&a<=90)return["Normal","green"];if(a<-30&&a>=-90)return["Left axis deviation","amber"];if(a>90)return["Right axis deviation","blue"];return["Extreme axis deviation","red"];}
+  function sgn(c){return Math.abs(c)<0.2?"≈ equiphasic":(c>0?"positive":"negative");}
+  function setAx(a){a=Math.max(-180,Math.min(180,Math.round(a/5)*5));ax.value=a;$("ax-deg").textContent=(a>0?"+":"")+a+"°";$("ax-needle").setAttribute("transform","rotate("+a+" 160 160)");
+    var z=zone(a),p=$("ax-zone");p.textContent=z[0];p.style.color="var(--"+z[1]+")";p.style.borderColor="var(--"+z[1]+")";p.style.background="var(--"+z[1]+"-bg)";
+    var cs={};LEADS.forEach(function(l){var c=Math.cos((a-l[1])*Math.PI/180);cs[l[0]]=c;var R1=4+24*Math.max(0,c),S1=4+24*Math.max(0,-c);
+      var el=$("axl-"+l[0]);el.querySelector("path").setAttribute("d","M2 34 L18 34 L21 37 L27 "+(34-R1).toFixed(1)+" L33 "+(34+S1).toFixed(1)+" L37 34 L58 34");el.querySelector("small").textContent=sgn(c);el.classList.toggle("key",l[0]==="I"||l[0]==="aVF");});
+    var s=function(c){return c>0.001?"positive":(c<-0.001?"negative":"equiphasic");};
+    $("ax-explain").innerHTML="Each lead's QRS = how much of the axis points along it (cosine of the angle between them): parallel = tallest, 90° = equiphasic, opposite = deepest. Lead I is <b>"+s(cs.I)+"</b>, aVF is <b>"+s(cs.aVF)+"</b>"+(a<0&&a>=-90?"; lead II (+60°) is <b>"+sgn(cs.II)+"</b>, which is what separates normal from left deviation (once the axis passes −30° it is more than 90° from lead II).":".");}
+  ax.addEventListener("input",function(){setAx(+this.value);});
+  document.querySelectorAll("#ax-presets .btn").forEach(function(b){b.addEventListener("click",function(){setAx(+b.dataset.a);});});
+  var svg=$("ax-svg"),drag=false;function fe(e){var r=svg.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*300+10,y=(e.clientY-r.top)/r.height*300+10;setAx(Math.atan2(y-160,x-160)*180/Math.PI);}
+  svg.addEventListener("pointerdown",function(e){drag=true;svg.setPointerCapture(e.pointerId);fe(e);});svg.addEventListener("pointermove",function(e){if(drag)fe(e);});svg.addEventListener("pointerup",function(){drag=false;});
+  setAx(60);})();
+
+/* ===== checklist ===== */
+(function(){var S=[
+ ["Identity and standardisation","Name, age or DOB, date taken. 25 mm/s and 10 mm = 1 mV (check the calibration pulse)."],
+ ["Rate","Lead II rhythm strip. Regular: 300 ÷ large squares. Irregular: QRS in 6 s × 10 or 10 s × 6. &lt;60 brady, &gt;100 tachy."],
+ ["Rhythm","Regular? (paper method, ≤1 small square). Sinus? Normal P, narrow QRS, one P per QRS."],
+ ["P wave","Present? Upright in II, III, aVF? &lt;2.5 small squares? Bifid (mitrale) or peaked (pulmonale)?"],
+ ["PR interval","Start of P → start of Q. 0.12–0.2 s. Long = heart block; short + delta = WPW."],
+ ["QRS complex","Start of Q → end of S. &lt;0.12 s. Broad? Low voltage &lt;5 mm? Hypertrophy voltages? Pathological Q (&gt;0.04 s, &gt;2 mm) across the whole ECG."],
+ ["QT interval","Start of QRS → end of T. Correct: QTc = QT ÷ √RR (same beat). 380–420 ms."],
+ ["ST segment","Isoelectric? Elevation &gt;1 mm limb / &gt;2 mm chest in 2 adjacent leads = infarction. Depression = ischaemia."],
+ ["T wave","Inverted where it shouldn't be (I, II, V4–V6)? Tall tented? Small?"],
+ ["Axis","Leads I and aVF (confirm left with II). Normal −30° to +90°."],
+ ["Other abnormal components","U waves, delta waves, anything else."],
+ ["Formulate an interpretation","Put it together in context, e.g. \"normal ECG for this patient\"."]];
+ var box=$("chk");S.forEach(function(s,i){var d=document.createElement("details");d.innerHTML='<summary><span class="dot">'+(i+1)+'</span><b>'+s[0]+'</b><span class="chev">›</span></summary><div class="body"><div>'+s[1]+'</div><label><input type="checkbox" id="chk'+i+'"> Done</label></div>';box.appendChild(d);
+   d.querySelector("input").addEventListener("change",function(){d.classList.toggle("done",this.checked);upd();});});
+ function upd(){var n=box.querySelectorAll("input:checked").length;$("chk-bar").style.width=(n/S.length*100)+"%";}upd();})();
+
+/* ===== tachycardia sorter ===== */
+(function(){var T={
+ nr:{t:"Narrow, regular",items:[["Sinus tachycardia","tachy"],["AVNRT","junc"],["AVRT (orthodromic)",null],["Atrial flutter","flutter"],["Atrial tachycardia",null]]},
+ ni:{t:"Narrow, irregular",items:[["Atrial fibrillation","af"],["Atrial flutter (variable block)","flutter"]]},
+ br:{t:"Broad, regular",items:[["Monomorphic VT","vt"],["Antidromic AVRT",null],["SVT with aberrant conduction",null]]},
+ bi:{t:"Broad, irregular",items:[["Polymorphic VT / torsade de pointes","tdp"],["AF with aberrant conduction",null],["Ventricular fibrillation","vf"]]}};
+ var st={w:null,r:null},el=$("tree");
+ function render(){var h='<div class="q">1 · QRS width?</div><div class="btnrow"><button type="button" class="btn'+(st.w==="n"?" on":"")+'" data-w="n">Narrow &lt;120 ms (supraventricular)</button><button type="button" class="btn'+(st.w==="b"?" on":"")+'" data-w="b">Broad (usually ventricular)</button></div>';
+  if(st.w)h+='<div class="q">2 · Regular?</div><div class="btnrow"><button type="button" class="btn'+(st.r==="r"?" on":"")+'" data-r="r">Regular</button><button type="button" class="btn'+(st.r==="i"?" on":"")+'" data-r="i">Irregular</button></div>';
+  if(st.w&&st.r){var n=T[st.w+st.r];h+='<div class="q">'+n.t+': causes</div><div class="res">'+n.items.map(function(x){return '<div class="resitem"><span>'+x[0]+'</span>'+(x[1]?'<button type="button" class="btn" data-play="'+x[1]+'">▶ Play</button>':'<span class="muted" style="font-size:.8rem">not in monitor</span>')+'</div>';}).join("")+'</div>';}
+  el.innerHTML=h;
+  el.querySelectorAll("[data-w]").forEach(function(b){b.addEventListener("click",function(){st.w=b.dataset.w;render();});});
+  el.querySelectorAll("[data-r]").forEach(function(b){b.addEventListener("click",function(){st.r=b.dataset.r;render();});});}
+ $("tr-reset").addEventListener("click",function(){st={w:null,r:null};render();});render();})();
+
+/* ===== STEMI evolution ===== */
+(function(){var SV=$("evo-svg"),G=gridDefs(),stops=[
+ ["Onset",{},"At onset: no change. Repeat a non-diagnostic ECG in ~10 minutes."],
+ ["Early",{t:.75,tw:.8},"T wave peaking comes first (lecturer's order: peaking → ST elevation → Q waves)."],
+ ["Minutes",{st:.42,t:.55},"Within minutes: ST elevation. Complete blockage, transmural (STEMI). Very high square = tombstoning."],
+ ["Hours–days",{q:-.45,r:.7,st:.12,t:-.3},"Hours to days: Q wave appears, R shortens, T inverts (balloon angioplasty: ST resolving, T inversion)."],
+ ["Weeks",{q:-.45,r:.7,t:-.3},"Weeks: ST resolved; T still inverted."],
+ ["Months on",{q:-.45,r:.7,t:.3},"Weeks onwards: T reverts, <b>Q persists</b>: permanent scar of an old MI (after stenting, the significant Q persists)."]];
+ var P2=stops.map(function(s){return P(s[1]);});
+ $("evo-stops").innerHTML=stops.map(function(s,i){return '<span data-i="'+i+'">'+s[0]+'</span>';}).join("");
+ function set(v){var i=Math.min(4,Math.floor(v)),k=v-i,B=lerp(P2[i],P2[i+1],k),n=Math.round(v);
+  SV.innerHTML=G.html+'<rect width="240" height="190" fill="url(#'+G.id+')"/><path d="'+beatPath(P({}),20,125,0.8)+'" fill="none" style="stroke:var(--muted)" stroke-width="1.1" opacity=".4"/><path d="'+beatPath(B,20,125,0.8)+'" fill="none" style="stroke:var(--red)" stroke-width="1.8" stroke-linejoin="round"/>';
+  $("evo-when").textContent=stops[n][0];$("evo-note").innerHTML=stops[n][2];
+  document.querySelectorAll("#evo-stops span").forEach(function(s){s.classList.toggle("on",+s.dataset.i===n);});}
+ $("evo-range").addEventListener("input",function(){set(+this.value);});
+ document.querySelectorAll("#evo-stops span").forEach(function(s){s.addEventListener("click",function(){$("evo-range").value=s.dataset.i;set(+s.dataset.i);});});
+ set(0);})();
+
+/* ===== STEMI localiser ===== */
+(function(){var ORDER12=["I","aVR","V1","V4","II","aVL","V2","V5","III","aVF","V3","V6"];
+ var BASE={I:{r:.8,s:-.15},II:{r:1.2},III:{r:.6,t:.15},aVR:{inv:-.8},aVL:{r:.5,s:-.2,t:.15},aVF:{r:.9,t:.25},V1:{r:.3,s:-1.0,q:0,t:.05},V2:{r:.5,s:-1.1,q:0,t:.35},V3:{r:.8,s:-.8,t:.4},V4:{r:1.3,s:-.5,t:.4},V5:{r:1.4,s:-.3,t:.35},V6:{r:1.2,s:-.1,t:.3}};
+ var TER={
+  inf:["Inferior",["II","III","aVF"],["aVL","V6"],"Right coronary artery","ST elevation II, III, aVF; reciprocal depression aVL and V6 (your example ECG)."],
+  ant:["Anterior",["V1","V2","V3","V4"],[],"Left anterior descending","ST elevation V1–V4 (lecturer: V2–V5). Lateral and inferior leads spared."],
+  lat:["Lateral",["I","aVL","V5","V6"],[],"Circumflex","ST elevation I, aVL, V5, V6."],
+  antlat:["Anterolateral",["I","aVL","V2","V3","V4","V5","V6"],[],"LAD + diagonal / circumflex","ST raised V2–V6 plus I and aVL: the distinction from anterior. Reciprocal depression elsewhere is typical."],
+  post:["Posterior",[],["V1","V2"],"Right coronary artery","No lead faces the back: <b>ST depression and tall R in V1–V2</b> are the mirror image of posterior ST elevation and Q waves."]};
+ var gridEl=$("loc-grid"),G=gridDefs();
+ function render(k){var T=k?TER[k]:null;
+  gridEl.innerHTML=ORDER12.map(function(l){var o={};for(var x in BASE[l])o[x]=BASE[l][x];var cls="";
+    if(T&&T[1].indexOf(l)>=0){o.st=.35;o.t=Math.max(o.t||.3,.45);cls="up";}
+    if(T&&T[2].indexOf(l)>=0){o.st=-.18;cls="down";if(k==="post"){o.r=.9;o.s=-.3;}}
+    var B=P(o);return '<div class="l12 '+cls+'"><svg viewBox="0 0 220 150"><rect width="220" height="150" fill="url(#'+G.id+')"/><path d="'+beatPath(B,10,90,0.8)+'" fill="none" style="stroke:var(--trace)" stroke-width="2"/></svg><b>'+l+'</b></div>';}).join("")+'<svg width="0" height="0" style="position:absolute">'+G.html+'</svg>';
+  $("loc-artery").textContent=T?T[3]:"Normal 12-lead";$("loc-note").innerHTML=T?T[4]:"A normal 12-lead for comparison: aVR negative, R wave growing V1 → V6, T normally flat/inverted in V1.";
+  document.querySelectorAll("#loc-btns .btn").forEach(function(b){b.classList.toggle("on",b.dataset.k===(k||""));});}
+ $("loc-btns").innerHTML='<button type="button" class="btn" data-k="">Normal</button>'+Object.keys(TER).map(function(k){return '<button type="button" class="btn" data-k="'+k+'">'+TER[k][0]+'</button>';}).join("");
+ document.querySelectorAll("#loc-btns .btn").forEach(function(b){b.addEventListener("click",function(){render(b.dataset.k);});});
+ render("inf");})();
+
+/* ===== clinical context cards ===== */
+(function(){var CC=[
+ ["ACS","red","ACS pathway: 3 ECG categories","<ul><li>Persistent ST elevation → STEMI</li><li>ST/T abnormalities</li><li>Normal or undetermined</li></ul>"],
+ ["ACS","red","ACS spectrum on ECG, least → most severe","<ol><li>Normal</li><li>ST depression</li><li>ST elevation</li><li>Malignant arrhythmia (VT/VF)</li></ol>"],
+ ["ACS","red","Diagnosing MI","Clinical history · ECG changes (STEMI / NSTEMI / NSTE-ACS) · raised cardiomyocyte markers. Older card: central chest pain, ST elevation, troponin: 2 of 3."],
+ ["ACS","red","STEMI vs NSTEMI anatomy","STEMI = transmural infarction. NSTEMI = subendocardial, but does <b>not</b> exclude transmural infarction remote from the ECG."],
+ ["ACS","red","Why NSTEMI / NSTE-ACS","<ul><li>Small branch occlusion</li><li>Occlusion of a well-collateralised vessel</li><li>Lateral STEMI in territory not well seen by ECG</li></ul>"],
+ ["ACS","red","Prinzmetal's angina","ST elevation, but no ischaemic damage on troponin."],
+ ["ACS","red","Primary PCI sequence","<ol><li>Before: no symptoms, normal ECG</li><li>MI: pain, ST elevation, occlusive thrombus</li><li>Balloon: ST resolving, T inversion</li><li>Stent: flow restored, Q wave persists</li></ol>"],
+ ["Arrhythmia","violet","Diagnosing an arrhythmia","Not from the history alone (only suggestive). ECG ± 24 h tape <b>while symptomatic</b>. Holter = ambulatory ECG 24/48/72 h. Rhythm disturbance diagnosed by pulse and ECG."],
+ ["Arrhythmia","violet","VT mechanisms","<ul><li>Acute LV damage: ischaemia, trauma</li><li>Chronic LV damage: (micro) re-entry around fibrosis</li><li>Na/K channelopathies = long QT</li></ul>Fast + broad → more ischaemia → self-propagating."],
+ ["Arrhythmia","violet","Channelopathies","Inherited (genetic) or acquired (drug-induced, autoimmune, inflammatory/fever). CPVT = catecholaminergic polymorphic VT, driven by adrenaline. Footballers can fail medicals on ECG screening."],
+ ["Arrhythmia","violet","AVRT pathways","Revealed accessory pathway = WPW 12-lead. Concealed = normal resting ECG (pathway conducts only retrogradely). Orthodromic: down AV node, up accessory. Antidromic: down accessory, up AV node."],
+ ["Arrhythmia","violet","Classification algorithm <span class='memo'>memorise</span>","Examinable (green) path: supraventricular → AV node → tachyarrhythmia → re-entry → AVNRT (also AVRT)."],
+ ["Devices","blue","Pacemaker indications in bradycardia","<ul><li>Symptoms: syncope, dizziness</li><li>Prophylactic at operations</li><li>Post acute MI (until healing lets natural pacemaker cells take over)</li></ul>"],
+ ["Devices","blue","Heart failure devices","Cardiac resynchronisation therapy for long QRS · implantable defibrillators in highly selected patients."],
+ ["Arrest","amber","Arrest rhythms","VT and VF: shockable. Pulseless electrical activity: ECG activity, no pulse (e.g. large PE). Asystole on continuous ECG supplements recognition of death in hospital."],
+ ["Arrest","amber","Circulation in ABCDE","More help? · wide-bore IV access + bloods · IV fluid bolus / transfusion · attach cardiac monitor / 12-lead ECG."]];
+ var cats=["All"];CC.forEach(function(c){if(cats.indexOf(c[0])<0)cats.push(c[0]);});
+ var f=$("cc-filter"),box=$("cc-cards");
+ f.innerHTML=cats.map(function(c){return '<button type="button" class="btn" data-c="'+c+'">'+c+'</button>';}).join("");
+ function show(c){box.innerHTML=CC.filter(function(x){return c==="All"||x[0]===c;}).map(function(x){return '<div class="cc" style="border-top:3px solid var(--'+x[1]+')"><span class="cat" style="color:var(--'+x[1]+')">'+x[0]+'</span><b>'+x[2]+'</b><div>'+x[3]+'</div></div>';}).join("");
+  f.querySelectorAll(".btn").forEach(function(b){b.classList.toggle("on",b.dataset.c===c);b.setAttribute("aria-pressed",b.dataset.c===c);});}
+ f.querySelectorAll(".btn").forEach(function(b){b.addEventListener("click",function(){show(b.dataset.c);});});show("All");})();
+
+/* ===== scrollspy ===== */
+(function(){var links={};document.querySelectorAll("#nav a").forEach(function(a){links[a.getAttribute("href").slice(1)]=a;});
+ if(!("IntersectionObserver" in window))return;
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){Object.keys(links).forEach(function(k){links[k].classList.remove("active");});var a=links[e.target.id];if(a){a.classList.add("active");if(window.innerWidth<=980){var as=document.querySelector("aside");as.scrollLeft=a.offsetLeft-as.clientWidth/2+a.offsetWidth/2;}}}});},{rootMargin:"-30% 0px -65% 0px"});
+ document.querySelectorAll("main section[id]").forEach(function(s){io.observe(s);});})();
+})();
+</script>
+
+</body></html>
